@@ -4,17 +4,21 @@
  */
 package GUI;
 
+import clases.Sistema;
+import clases.Usuario;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author gerar
  */
 public class FrmLogin extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmLogin
-     */
+    private Sistema sistema = new Sistema();
+
     public FrmLogin() {
         initComponents();
+
     }
 
     /**
@@ -99,7 +103,23 @@ public class FrmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
+        String dni = txtDNI.getText().trim();
+        String clave = txtClave.getText().trim();
+
+        if (dni.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese su DNI");
+            return;
+        }
+        Usuario usuario = sistema.login(dni, clave);
+
+        if (usuario != null) {
+            JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario.getNombre()
+                    + " (" + usuario.getRol().getNombreRol() + ")");
+            usuario.mostrarMenu(); // muestra menú del rol
+        } else {
+            JOptionPane.showMessageDialog(this, "DNI no registrado o incorrecto");
+        }
+
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     /**

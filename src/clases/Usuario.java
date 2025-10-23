@@ -8,15 +8,18 @@ public class Usuario {
     private String dni;
     private String nombre;
     private String apellido;
+    private String clave;
     private Rol rol;
+    
 
     public Usuario() {}
 
-    public Usuario(int idUsuario, String dni, String nombre, String apellido, Rol rol) {
+    public Usuario(int idUsuario, String dni, String nombre, String apellido,String clave, Rol rol) {
         this.idUsuario = idUsuario;
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.clave = clave;
         this.rol = rol;
     }
 
@@ -54,6 +57,14 @@ public class Usuario {
 
     public Rol getRol() {
         return rol;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
     public void setRol(Rol rol) {

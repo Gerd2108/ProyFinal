@@ -10,18 +10,19 @@ public class Sistema {
     private ArrayList<Alquiler> alquileres = new ArrayList<>();
 
     public Sistema() {
-        usuarios.add(new Usuario(1, "12345678", "María", "Pérez", new Administrador()));
-        usuarios.add(new Usuario(2, "87654321", "Juan", "Lopez", new Trabajador()));
-        usuarios.add(new Usuario(3, "11223344", "Ana", "Torres", new Invitado()));
+        usuarios.add(new Usuario(1, "12345678", "María", "Pérez", "admin1", new Administrador()));
+        usuarios.add(new Usuario(2, "87654321", "Juan", "Lopez", "trabajador123", new Trabajador()));
+        usuarios.add(new Usuario(3, "11223344", "Ana", "Torres", "invitado123", new Invitado()));
+
     }
 
     public void registrarUsuario(Usuario u) {
         usuarios.add(u);
     }
 
-    public Usuario login(String dni) {
+    public Usuario login(String dni, String clave) {
         for (Usuario u : usuarios) {
-            if (u.getDni().equals(dni)) {
+            if (u.getDni().equals(dni) && u.getClave().equals(clave)) {
                 return u;
             }
         }
