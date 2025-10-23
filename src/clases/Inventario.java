@@ -6,6 +6,12 @@ public class Inventario {
 
     private ArrayList<Producto> listaProductos = new ArrayList<>();
 
+    public void mostrarInventario() {
+        for (Producto p : listaProductos) {
+            System.out.println("ID: " + p.getIdProducto() + " | Nombre: " + p.getNomProducto() + " | Categoría: " + p.getCatProducto());
+        }
+    }
+
     public void agregarProducto(Producto p) {
         listaProductos.add(p);
     }

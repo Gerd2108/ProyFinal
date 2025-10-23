@@ -1,22 +1,23 @@
 package clases;
 
+import interfaces.Rol;
+
 public class Usuario {
 
     private int idUsuario;
     private String dni;
     private String nombre;
     private String apellido;
-    private String tipoUsuario;
+    private Rol rol;
 
-    public Usuario() {
-    }
+    public Usuario() {}
 
-    public Usuario(int idUsuario, String dni, String nombre, String apellido, String tipoUsuario) {
+    public Usuario(int idUsuario, String dni, String nombre, String apellido, Rol rol) {
         this.idUsuario = idUsuario;
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.tipoUsuario = tipoUsuario;
+        this.rol = rol;
     }
 
     public int getIdUsuario() {
@@ -51,12 +52,15 @@ public class Usuario {
         this.apellido = apellido;
     }
 
-    public String getTipoUsuario() {
-        return tipoUsuario;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setTipoUsuario(String tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
+    public void mostrarMenu() {
+        rol.mostrarMenu();
+    }
 }

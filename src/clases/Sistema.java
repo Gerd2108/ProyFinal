@@ -1,13 +1,19 @@
 package clases;
 
-import interfaces.Operacion;
 import java.util.ArrayList;
+import interfaces.Operacion;
 
 public class Sistema {
 
     private ArrayList<Usuario> usuarios = new ArrayList<>();
     private Inventario inventario = new Inventario();
-    private ArrayList<Operacion> operaciones = new ArrayList<>();
+    private ArrayList<Alquiler> alquileres = new ArrayList<>();
+
+    public Sistema() {
+        usuarios.add(new Usuario(1, "12345678", "María", "Pérez", new Administrador()));
+        usuarios.add(new Usuario(2, "87654321", "Juan", "Lopez", new Trabajador()));
+        usuarios.add(new Usuario(3, "11223344", "Ana", "Torres", new Invitado()));
+    }
 
     public void registrarUsuario(Usuario u) {
         usuarios.add(u);
@@ -22,14 +28,14 @@ public class Sistema {
         return null;
     }
 
-    public void registrarOperacion(Operacion op) {
-        operaciones.add(op);
+    public void registrarAlquiler(Alquiler a) {
+        alquileres.add(a);
     }
 
     public double calcularTotalIngresos() {
         double total = 0;
-        for (Operacion op : operaciones) {
-            total += op.calcularTotal();
+        for (Alquiler a : alquileres) {
+            total += a.calcularTotal();
         }
         return total;
     }
@@ -38,7 +44,11 @@ public class Sistema {
         return inventario;
     }
 
-    public ArrayList<Operacion> getOperaciones() {
-        return operaciones;
+    public ArrayList<Alquiler> getAlquileres() {
+        return alquileres;
+    }
+
+    public ArrayList<Usuario> getUsuarios() {
+        return usuarios;
     }
 }
