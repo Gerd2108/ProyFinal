@@ -8,6 +8,6 @@ package clases;
  *
  * @author Eduardo Torres
  */
-public class chau {
+public class Venta {
     
 }
