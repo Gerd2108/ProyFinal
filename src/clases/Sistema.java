@@ -13,6 +13,7 @@ public class Sistema {
         usuarios.add(new Usuario(1, "12345678", "María", "Pérez", "admin1", new Administrador()));
         usuarios.add(new Usuario(2, "87654321", "Juan", "Lopez", "trabajador1", new Trabajador()));
         usuarios.add(new Usuario(3, "11223344", "Ana", "Torres", "invitado1", new Invitado()));
+        usuarios.add(new Usuario(3, "74769138", "Maria", "Luna", "secretaria1", new Secretaria()));
 
     }
 

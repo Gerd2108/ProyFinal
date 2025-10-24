@@ -135,13 +135,40 @@ public class FrmLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor ingrese su DNI");
             return;
         }
+
         Usuario usuario = sistema.login(dni, clave);
 
         if (usuario != null) {
             JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario.getNombre()
                     + " (" + usuario.getRol().getNombreRol() + ")");
-            FrmAdmin frmAdmin = new FrmAdmin();
-            frmAdmin.setVisible(true);
+
+            String nombreRol = usuario.getRol().getNombreRol();
+
+            switch (nombreRol.toLowerCase()) {
+                case "administrador":
+                    new FrmAdmin().setVisible(true);
+                    break;
+                case "contadora":
+                    new FrmContador().setVisible(true);
+                    break;
+                case "encargado":
+                    new FrmEncargado().setVisible(true);
+                    break;
+                case "secretaria":
+                    new FrmSecretaria().setVisible(true);
+                    break;
+                case "trabajador":
+                    new FrmTrabajador().setVisible(true);
+                    break;
+                case "invitado":
+                    new FrmInvitado().setVisible(true);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Rol no reconocido: " + nombreRol);
+                    return;
+            }            
+            this.dispose();
+
         } else {
             JOptionPane.showMessageDialog(this, "DNI no registrado o incorrecto");
         }
