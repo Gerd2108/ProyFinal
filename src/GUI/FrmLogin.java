@@ -64,7 +64,7 @@ public class FrmLogin extends javax.swing.JFrame {
 
         jLabel6.setText("© 2025 DAL Estructuras S.A.C ");
 
-        btnMostrarClave.setText("mostrar clave");
+        btnMostrarClave.setText("MOSTRAR CLAVE");
         btnMostrarClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMostrarClaveActionPerformed(evt);
@@ -88,16 +88,14 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addGap(236, 236, 236)
                             .addComponent(jLabel6))))
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(167, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(149, 149, 149)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(txtDNI, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
@@ -193,7 +191,7 @@ public class FrmLogin extends javax.swing.JFrame {
     private void btnMostrarClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarClaveActionPerformed
         if (mostrarClave) {
             txtClave.setEchoChar('•');
-            btnMostrarClave.setText("Mostrar");
+            btnMostrarClave.setText("MOSTRAR CLAVE");
             mostrarClave = false;
         } else {
             txtClave.setEchoChar((char) 0);
