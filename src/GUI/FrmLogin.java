@@ -140,7 +140,8 @@ public class FrmLogin extends javax.swing.JFrame {
         if (usuario != null) {
             JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario.getNombre()
                     + " (" + usuario.getRol().getNombreRol() + ")");
-            usuario.mostrarMenu(); // muestra menú del rol
+            FrmAdmin frmAdmin = new FrmAdmin();
+            frmAdmin.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "DNI no registrado o incorrecto");
         }
