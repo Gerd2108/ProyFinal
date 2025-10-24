@@ -7,7 +7,7 @@ public class Encargado implements Rol {
 
     @Override
     public String getNombreRol() {
-        return "Encargado Laboral";
+        return "encargado";
     }
 
     @Override

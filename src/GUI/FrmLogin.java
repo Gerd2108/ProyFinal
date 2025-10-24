@@ -166,7 +166,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 default:
                     JOptionPane.showMessageDialog(this, "Rol no reconocido: " + nombreRol);
                     return;
-            }            
+            }
             this.dispose();
 
         } else {

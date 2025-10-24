@@ -7,7 +7,7 @@ public class Administrador implements Rol {
 
     @Override
     public String getNombreRol() {
-        return "Jefe de Empresa";
+        return "administrador";
     }
 
     @Override
