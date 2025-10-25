@@ -6,7 +6,10 @@ package GUI;
 
 import clases.Sistema;
 import clases.Usuario;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -18,7 +21,6 @@ public class FrmLogin extends javax.swing.JFrame {
 
     public FrmLogin() {
         initComponents();
-
     }
 
     /**
@@ -42,6 +44,8 @@ public class FrmLogin extends javax.swing.JFrame {
         btnMostrarClave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Iniciar Sesion");
+        setIconImage(getIconImage());
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Nirmala Text", 0, 48)); // NOI18N
@@ -80,7 +84,7 @@ public class FrmLogin extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(150, 150, 150)
+                            .addGap(159, 159, 159)
                             .addComponent(jLabel1))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(253, 253, 253)
@@ -88,7 +92,7 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addGap(236, 236, 236)
                             .addComponent(jLabel6))))
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(158, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,6 +204,15 @@ public class FrmLogin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnMostrarClaveActionPerformed
 
+    @Override
+public Image getIconImage() {
+   Image retValue = Toolkit.getDefaultToolkit().
+         getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+
+
+   return retValue;
+}
+    
     /**
      * @param args the command line arguments
      */

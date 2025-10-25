@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+
 /**
  *
  * @author DIEGO
@@ -47,6 +50,8 @@ public class FrmEncargado extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Panel de Control");
+        setIconImage(getIconImage());
 
         lblBienvenida.setText("¡Bienvenido, NOMBRE! (ENCARGADO)");
 
@@ -121,6 +126,15 @@ public class FrmEncargado extends javax.swing.JFrame {
             }
         });
     }
+    
+         @Override
+public Image getIconImage() {
+   Image retValue = Toolkit.getDefaultToolkit().
+         getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+
+
+   return retValue;
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;
