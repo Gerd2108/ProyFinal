@@ -15,6 +15,22 @@ public class FrmContador extends javax.swing.JFrame {
      */
     public FrmContador() {
         initComponents();
+
+        btnSalir.addActionListener(e -> {
+            int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Seguro que deseas cerrar sesión?",
+                    "Confirmar cierre de sesión",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                dispose();
+                FrmLogin login = new FrmLogin();
+                login.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -37,6 +53,11 @@ public class FrmContador extends javax.swing.JFrame {
         lblPNG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/contador.png"))); // NOI18N
 
         btnSalir.setText("CERRAR SESION");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -68,8 +89,13 @@ public class FrmContador extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        setSize(new java.awt.Dimension(743, 536));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments

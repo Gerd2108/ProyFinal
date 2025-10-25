@@ -15,6 +15,22 @@ public class FrmAdmin extends javax.swing.JFrame {
      */
     public FrmAdmin() {
         initComponents();
+
+        btnSalir.addActionListener(e -> {
+            int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Seguro que deseas cerrar sesión?",
+                    "Confirmar cierre de sesión",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                dispose(); 
+                FrmLogin login = new FrmLogin(); 
+                login.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -113,7 +129,8 @@ public class FrmAdmin extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pack();
+        setSize(new java.awt.Dimension(754, 532));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
