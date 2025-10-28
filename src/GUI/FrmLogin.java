@@ -42,6 +42,7 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtClave = new javax.swing.JPasswordField();
         btnMostrarClave = new javax.swing.JButton();
+        cbInvitado = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Iniciar Sesion");
@@ -75,6 +76,8 @@ public class FrmLogin extends javax.swing.JFrame {
             }
         });
 
+        cbInvitado.setText("Ingresar como Invitado");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,7 +95,7 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addGap(236, 236, 236)
                             .addComponent(jLabel6))))
-                .addContainerGap(158, Short.MAX_VALUE))
+                .addContainerGap(180, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,7 +111,9 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addGap(68, 68, 68))
                     .addComponent(txtClave, javax.swing.GroupLayout.Alignment.LEADING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMostrarClave)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnMostrarClave)
+                    .addComponent(cbInvitado))
                 .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
@@ -128,7 +133,8 @@ public class FrmLogin extends javax.swing.JFrame {
                             .addComponent(btnMostrarClave)))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbInvitado)))
                 .addGap(25, 25, 25)
                 .addComponent(jLabel5)
                 .addGap(36, 36, 36)
@@ -251,6 +257,7 @@ public Image getIconImage() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnMostrarClave;
+    private javax.swing.JCheckBox cbInvitado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
