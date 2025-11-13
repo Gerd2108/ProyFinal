@@ -4,8 +4,11 @@
  */
 package GUI;
 
+import clases.Sistema;
+import clases.Usuario;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,24 +19,39 @@ public class FrmTrabajador extends javax.swing.JFrame {
     /**
      * Creates new form FrmTrabajador
      */
-    public FrmTrabajador() {
+    private Usuario usuarioLogueado;
+    private Sistema sistema;
+
+    public FrmTrabajador(Usuario usuario, Sistema sistema) {
         initComponents();
+        this.usuarioLogueado = usuario;
+        this.sistema = sistema;
+
+        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+
+        for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
+            btnSalir.removeActionListener(al);
+        }
 
         btnSalir.addActionListener(e -> {
-            int opcion = javax.swing.JOptionPane.showConfirmDialog(
+            int opcion = JOptionPane.showConfirmDialog(
                     this,
                     "¿Seguro que deseas cerrar sesión?",
                     "Confirmar cierre de sesión",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.QUESTION_MESSAGE
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
             );
 
-            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+            if (opcion == JOptionPane.YES_OPTION) {
                 dispose();
                 FrmLogin login = new FrmLogin();
                 login.setVisible(true);
             }
         });
+    }
+
+    public FrmTrabajador() {
+        initComponents();
     }
 
     /**
@@ -47,12 +65,12 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
         lblBienvenida = new javax.swing.JLabel();
         lblPNG = new javax.swing.JLabel();
-        btnSalir = new javax.swing.JButton();
+        btnRegistrarEntrada = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        btnSalir1 = new javax.swing.JButton();
-        btnSalir2 = new javax.swing.JButton();
-        btnSalir3 = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
+        btnRecibo = new javax.swing.JButton();
+        btnRegistrarSalida = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -62,10 +80,10 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
         lblPNG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/trabajador.png"))); // NOI18N
 
-        btnSalir.setText("REGISTRAR ENTRADA");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnRegistrarEntrada.setText("REGISTRAR ENTRADA");
+        btnRegistrarEntrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
+                btnRegistrarEntradaActionPerformed(evt);
             }
         });
 
@@ -73,19 +91,24 @@ public class FrmTrabajador extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        btnSalir1.setText("CERRAR SESION");
-
-        btnSalir2.setText("DESCARGAR RECIBO");
-        btnSalir2.addActionListener(new java.awt.event.ActionListener() {
+        btnSalir.setText("CERRAR SESION");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir2ActionPerformed(evt);
+                btnSalirActionPerformed(evt);
             }
         });
 
-        btnSalir3.setText("REGISTRAR SALIDA");
-        btnSalir3.addActionListener(new java.awt.event.ActionListener() {
+        btnRecibo.setText("DESCARGAR RECIBO");
+        btnRecibo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir3ActionPerformed(evt);
+                btnReciboActionPerformed(evt);
+            }
+        });
+
+        btnRegistrarSalida.setText("REGISTRAR SALIDA");
+        btnRegistrarSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarSalidaActionPerformed(evt);
             }
         });
 
@@ -108,10 +131,10 @@ public class FrmTrabajador extends javax.swing.JFrame {
                                 .addComponent(lblPNG)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSalir2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSalir3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -127,13 +150,13 @@ public class FrmTrabajador extends javax.swing.JFrame {
                         .addComponent(jScrollPane1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(90, 90, 90)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalir3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSalir2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(11, 11, 11)
-                        .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(16, 16, 16)))
                 .addContainerGap())
         );
@@ -142,17 +165,53 @@ public class FrmTrabajador extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegistrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarEntradaActionPerformed
+        if (usuarioLogueado != null && sistema != null) {
+            sistema.registrarAsistencia(usuarioLogueado, "Entrada");
+            JOptionPane.showMessageDialog(this, "Entrada registrada exitosamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: No se pudo registrar la entrada.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnRegistrarEntradaActionPerformed
+
+    private void btnReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReciboActionPerformed
+        if (usuarioLogueado != null && sistema != null) {
+            String reciboTexto = sistema.generarReciboPorHonorarios(usuarioLogueado);
+            JOptionPane.showMessageDialog(this, reciboTexto, "Recibo por Honorarios", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: No se pudo generar el recibo.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnReciboActionPerformed
+
+    private void btnRegistrarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarSalidaActionPerformed
+        if (usuarioLogueado != null && sistema != null) {
+            sistema.registrarAsistencia(usuarioLogueado, "Salida");
+            JOptionPane.showMessageDialog(this, "Salida registrada exitosamente.");
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Error: No se pudo registrar la salida.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
+
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void btnSalir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalir2ActionPerformed
-
-    private void btnSalir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalir3ActionPerformed
+    private void cargarRegistrosAsistencia() {
+        if (usuarioLogueado != null && sistema != null) {
+            java.util.List<String> registros = sistema.obtenerRegistrosAsistencia(usuarioLogueado);
+            StringBuilder sb = new StringBuilder("--- Registros de Asistencia ---\n");
+            if (registros.isEmpty()) {
+                sb.append("Aún no hay registros.\n");
+            } else {
+                for (String registro : registros) {
+                    sb.append(registro).append("\n");
+                }
+            }
+            jTextArea1.setText(sb.toString());
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -168,16 +227,24 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmTrabajador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmTrabajador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -188,21 +255,20 @@ public class FrmTrabajador extends javax.swing.JFrame {
             }
         });
     }
-    
-         @Override
-public Image getIconImage() {
-   Image retValue = Toolkit.getDefaultToolkit().
-         getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
-   return retValue;
-}
+        return retValue;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRecibo;
+    private javax.swing.JButton btnRegistrarEntrada;
+    private javax.swing.JButton btnRegistrarSalida;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JButton btnSalir1;
-    private javax.swing.JButton btnSalir2;
-    private javax.swing.JButton btnSalir3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblBienvenida;

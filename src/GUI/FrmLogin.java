@@ -8,6 +8,7 @@ import clases.Sistema;
 import clases.Usuario;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 
@@ -18,9 +19,27 @@ import javax.swing.ImageIcon;
 public class FrmLogin extends javax.swing.JFrame {
 
     private Sistema sistema = new Sistema();
+    private boolean mostrarClave = false;
 
     public FrmLogin() {
         initComponents();
+
+        chkInvitado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                chkInvitadoActionPerformed(evt);
+            }
+
+            private void chkInvitadoActionPerformed(ActionEvent evt) {
+                if (chkInvitado.isSelected()) {
+                    txtClave.setText("");
+                    txtClave.setEnabled(false);
+                    btnMostrarClave.setEnabled(false);
+                } else {
+                    txtClave.setEnabled(true);
+                    btnMostrarClave.setEnabled(true);
+                }
+            }
+        });
     }
 
     /**
@@ -42,7 +61,7 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtClave = new javax.swing.JPasswordField();
         btnMostrarClave = new javax.swing.JButton();
-        cbInvitado = new javax.swing.JCheckBox();
+        chkInvitado = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Iniciar Sesion");
@@ -76,7 +95,7 @@ public class FrmLogin extends javax.swing.JFrame {
             }
         });
 
-        cbInvitado.setText("Ingresar como Invitado");
+        chkInvitado.setText("Ingresar como Invitado");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,7 +132,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnMostrarClave)
-                    .addComponent(cbInvitado))
+                    .addComponent(chkInvitado))
                 .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
@@ -134,7 +153,7 @@ public class FrmLogin extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
                         .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cbInvitado)))
+                        .addComponent(chkInvitado)))
                 .addGap(25, 25, 25)
                 .addComponent(jLabel5)
                 .addGap(36, 36, 36)
@@ -150,16 +169,33 @@ public class FrmLogin extends javax.swing.JFrame {
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         String dni = txtDNI.getText().trim();
-        String clave = txtClave.getText().trim();
+        String clave = new String(txtClave.getPassword()).trim();
 
-        if (dni.isEmpty()) {
+        if (dni.isEmpty() && !chkInvitado.isSelected()) {
             JOptionPane.showMessageDialog(this, "Por favor ingrese su DNI");
+            return;
+        }
+
+        if (chkInvitado.isSelected()) {
+            clave = "";
+        } else if (clave.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese su CONTRASEÑA");
             return;
         }
 
         Usuario usuario = sistema.login(dni, clave);
 
         if (usuario != null) {
+            if (chkInvitado.isSelected() && !"invitado".equalsIgnoreCase(usuario.getRol().getNombreRol())) {
+                JOptionPane.showMessageDialog(this, "Este DNI no corresponde a un invitado.");
+                return;
+            }
+
+            if (!chkInvitado.isSelected() && "invitado".equalsIgnoreCase(usuario.getRol().getNombreRol())) {
+                JOptionPane.showMessageDialog(this, "Para ingresar como invitado, marque la casilla correspondiente.");
+                return;
+            }
+
             JOptionPane.showMessageDialog(this, "Bienvenido, " + usuario.getNombre()
                     + " (" + usuario.getRol().getNombreRol() + ")");
 
@@ -179,11 +215,16 @@ public class FrmLogin extends javax.swing.JFrame {
                     new FrmSecretaria().setVisible(true);
                     break;
                 case "trabajador":
-                    new FrmTrabajador().setVisible(true);
+                    new FrmTrabajador(usuario,sistema).setVisible(true);
                     break;
                 case "invitado":
-                    new FrmInvitado().setVisible(true);
-                    break;
+                    if (chkInvitado.isSelected() || sistema.buscarUsuarioPorDNI(dni) != null && "invitado".equalsIgnoreCase(sistema.buscarUsuarioPorDNI(dni).getRol().getNombreRol())) {
+                        new FrmInvitado().setVisible(true);
+                    } else {
+
+                        JOptionPane.showMessageDialog(this, "Error al intentar ingresar como invitado.");
+                        return;
+                    }
                 default:
                     JOptionPane.showMessageDialog(this, "Rol no reconocido: " + nombreRol);
                     return;
@@ -191,12 +232,15 @@ public class FrmLogin extends javax.swing.JFrame {
             this.dispose();
 
         } else {
-            JOptionPane.showMessageDialog(this, "DNI no registrado o incorrecto");
+            if (chkInvitado.isSelected()) {
+                JOptionPane.showMessageDialog(this, "DNI de invitado no registrado o incorrecto");
+            } else {
+                JOptionPane.showMessageDialog(this, "DNI o Contraseña incorrectos");
+            }
         }
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 
-    private boolean mostrarClave = false;
 
     private void btnMostrarClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarClaveActionPerformed
         if (mostrarClave) {
@@ -211,14 +255,13 @@ public class FrmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMostrarClaveActionPerformed
 
     @Override
-public Image getIconImage() {
-   Image retValue = Toolkit.getDefaultToolkit().
-         getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
+        return retValue;
+    }
 
-   return retValue;
-}
-    
     /**
      * @param args the command line arguments
      */
@@ -257,7 +300,7 @@ public Image getIconImage() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnMostrarClave;
-    private javax.swing.JCheckBox cbInvitado;
+    private javax.swing.JCheckBox chkInvitado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
