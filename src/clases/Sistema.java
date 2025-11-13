@@ -82,13 +82,13 @@ public class Sistema {
     public String generarReciboPorHonorarios(Usuario trabajador) {
         System.out.println("Generando recibo para: " + trabajador.getNombre());
 
-        return "Recibo de Honorarios para " + trabajador.getNombre() + " - Monto: S/ XXXX.XX"; // Placeholder
+        return "Recibo de Honorarios para " + trabajador.getNombre() + " - Monto: S/ XXXX.XX"; 
     }
 
     public String generarReporteGlobal() {
         System.out.println("Generando reporte global...");
 
-        return "Reporte Global - Total Usuarios: " + usuarios.size() + " - Items Inventario: " + inventario.getListaProductos().size(); // Placeholder
+        return "Reporte Global - Total Usuarios: " + usuarios.size() + " - Items Inventario: " + inventario.getListaProductos().size(); 
     }
 
     public String generarReporteFinanciero() {

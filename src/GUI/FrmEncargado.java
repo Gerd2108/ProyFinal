@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import clases.Sistema;
+import clases.Usuario;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -16,8 +19,19 @@ public class FrmEncargado extends javax.swing.JFrame {
     /**
      * Creates new form FrmEncargado
      */
-    public FrmEncargado() {
+    private Usuario usuarioLogueado;
+    private Sistema sistema;
+
+    public FrmEncargado(Usuario usuario, Sistema sistema) {
         initComponents();
+        this.usuarioLogueado = usuario;
+        this.sistema = sistema;
+        
+        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+        
+        for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
+            btnSalir.removeActionListener(al);
+        }
 
         btnSalir.addActionListener(e -> {
             int opcion = javax.swing.JOptionPane.showConfirmDialog(
@@ -34,6 +48,10 @@ public class FrmEncargado extends javax.swing.JFrame {
                 login.setVisible(true);
             }
         });
+    }
+
+    public FrmEncargado() {
+        initComponents();
     }
 
     /**
@@ -163,15 +181,14 @@ public class FrmEncargado extends javax.swing.JFrame {
             }
         });
     }
-    
-         @Override
-public Image getIconImage() {
-   Image retValue = Toolkit.getDefaultToolkit().
-         getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
-   return retValue;
-}
+        return retValue;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;

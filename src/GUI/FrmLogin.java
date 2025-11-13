@@ -203,28 +203,29 @@ public class FrmLogin extends javax.swing.JFrame {
 
             switch (nombreRol.toLowerCase()) {
                 case "administrador":
-                    new FrmAdmin().setVisible(true);
+                    new FrmAdmin(usuario,sistema).setVisible(true);
                     break;
                 case "contadora":
-                    new FrmContador().setVisible(true);
+                    new FrmContador(usuario,sistema).setVisible(true);
                     break;
                 case "encargado":
-                    new FrmEncargado().setVisible(true);
+                    new FrmEncargado(usuario,sistema).setVisible(true);
                     break;
                 case "secretaria":
-                    new FrmSecretaria().setVisible(true);
+                    new FrmSecretaria(usuario,sistema).setVisible(true);
                     break;
                 case "trabajador":
                     new FrmTrabajador(usuario,sistema).setVisible(true);
                     break;
                 case "invitado":
                     if (chkInvitado.isSelected() || sistema.buscarUsuarioPorDNI(dni) != null && "invitado".equalsIgnoreCase(sistema.buscarUsuarioPorDNI(dni).getRol().getNombreRol())) {
-                        new FrmInvitado().setVisible(true);
+                        new FrmInvitado(usuario,sistema).setVisible(true);
                     } else {
 
                         JOptionPane.showMessageDialog(this, "Error al intentar ingresar como invitado.");
                         return;
                     }
+                    break;
                 default:
                     JOptionPane.showMessageDialog(this, "Rol no reconocido: " + nombreRol);
                     return;

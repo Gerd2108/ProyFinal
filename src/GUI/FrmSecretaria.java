@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import clases.Sistema;
+import clases.Usuario;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -16,9 +19,20 @@ public class FrmSecretaria extends javax.swing.JFrame {
     /**
      * Creates new form FrmSecretaria
      */
-    public FrmSecretaria() {
+    private Usuario usuarioLogueado;
+    private Sistema sistema;
+
+    public FrmSecretaria(Usuario usuario, Sistema sistema) {
         initComponents();
-        
+        this.usuarioLogueado = usuario;
+        this.sistema = sistema;
+
+        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+
+        for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
+            btnSalir.removeActionListener(al);
+        }
+
         btnSalir.addActionListener(e -> {
             int opcion = javax.swing.JOptionPane.showConfirmDialog(
                     this,
@@ -29,11 +43,15 @@ public class FrmSecretaria extends javax.swing.JFrame {
             );
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
-                dispose(); 
-                FrmLogin login = new FrmLogin(); 
+                dispose();
+                FrmLogin login = new FrmLogin();
                 login.setVisible(true);
             }
         });
+    }
+
+    public FrmSecretaria() {
+        initComponents();
     }
 
     /**
@@ -178,15 +196,14 @@ public class FrmSecretaria extends javax.swing.JFrame {
             }
         });
     }
-    
-         @Override
-public Image getIconImage() {
-   Image retValue = Toolkit.getDefaultToolkit().
-         getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
-   return retValue;
-}
+        return retValue;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;
