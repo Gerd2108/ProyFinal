@@ -69,26 +69,29 @@ public class Sistema {
     }
 
     public void registrarAsistencia(Usuario usuario, String tipo) {
+        String registro = tipo + " - " + new java.util.Date().toString();
+        usuario.getAsistencia().add(registro);
         System.out.println("Registrando " + tipo + " para: " + usuario.getNombre());
 
     }
 
     public List<String> obtenerRegistrosAsistencia(Usuario usuario) {
         System.out.println("Obteniendo registros de asistencia para: " + usuario.getNombre());
-
-        return new ArrayList<>();
+        return usuario.getAsistencia();
     }
 
     public String generarReciboPorHonorarios(Usuario trabajador) {
         System.out.println("Generando recibo para: " + trabajador.getNombre());
+        double monto = 1200 + (Math.random() * 300);
+        String montoFormateado = String.format("%.2f", monto);
 
-        return "Recibo de Honorarios para " + trabajador.getNombre() + " - Monto: S/ XXXX.XX"; 
+        return "Recibo de Honorarios para " + trabajador.getNombre() + " - Monto: S/ " + montoFormateado;
     }
 
     public String generarReporteGlobal() {
         System.out.println("Generando reporte global...");
 
-        return "Reporte Global - Total Usuarios: " + usuarios.size() + " - Items Inventario: " + inventario.getListaProductos().size(); 
+        return "Reporte Global - Total Usuarios: " + usuarios.size() + " - Items Inventario: " + inventario.getListaProductos().size();
     }
 
     public String generarReporteFinanciero() {
@@ -99,7 +102,6 @@ public class Sistema {
     }
 
     public void registrarPagoPersonal(Usuario contador, Usuario empleado, double monto) {
-        System.out.println(contador.getNombre() + " está registrando un pago de S/" + monto + " para " + empleado.getNombre());
 
     }
 

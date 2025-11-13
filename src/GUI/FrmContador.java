@@ -9,6 +9,7 @@ import clases.Usuario;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +20,22 @@ public class FrmContador extends javax.swing.JFrame {
     /**
      * Creates new form FrmContador
      */
+    private void cargarUsuariosEnTabla() {
+        String[] columnas = {"DNI", "Nombre", "Apellido", "Rol"};
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
+
+        for (clases.Usuario u : sistema.getUsuarios()) {
+            Object[] fila = {
+                u.getDni(),
+                u.getNombre(),
+                u.getApellido(),
+                u.getRol().getNombreRol()
+            };
+            modelo.addRow(fila);
+        }
+        tblResultados.setModel(modelo);
+    }
+
     private Usuario usuarioLogueado;
     private Sistema sistema;
 
@@ -26,9 +43,10 @@ public class FrmContador extends javax.swing.JFrame {
         initComponents();
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
+        cargarUsuariosEnTabla();
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
-        
+
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
         }
@@ -66,13 +84,13 @@ public class FrmContador extends javax.swing.JFrame {
         lblBienvenida = new javax.swing.JLabel();
         lblPNG = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
-        btnSalir1 = new javax.swing.JButton();
-        btnSalir2 = new javax.swing.JButton();
+        btnRegPago = new javax.swing.JButton();
+        btnReporte = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
+        txaReporte = new javax.swing.JTextArea();
+        txtMonto = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblResultados = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -90,27 +108,27 @@ public class FrmContador extends javax.swing.JFrame {
             }
         });
 
-        btnSalir1.setText("REGISTRAR PAGO");
-        btnSalir1.addActionListener(new java.awt.event.ActionListener() {
+        btnRegPago.setText("REGISTRAR PAGO");
+        btnRegPago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir1ActionPerformed(evt);
+                btnRegPagoActionPerformed(evt);
             }
         });
 
-        btnSalir2.setText("GENERAR REPORTE");
-        btnSalir2.addActionListener(new java.awt.event.ActionListener() {
+        btnReporte.setText("GENERAR REPORTE");
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalir2ActionPerformed(evt);
+                btnReporteActionPerformed(evt);
             }
         });
 
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Reporte"));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txaReporte.setColumns(20);
+        txaReporte.setRows(5);
+        jScrollPane1.setViewportView(txaReporte);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -121,7 +139,7 @@ public class FrmContador extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblResultados);
 
         jLabel1.setText("INGRESE MONTO:");
 
@@ -151,11 +169,11 @@ public class FrmContador extends javax.swing.JFrame {
                                 .addGap(159, 159, 159)
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnSalir1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSalir2, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                            .addComponent(btnRegPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
                             .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(24, 24, 24))
         );
@@ -175,14 +193,14 @@ public class FrmContador extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRegPago, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                        .addComponent(btnSalir2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
@@ -195,13 +213,43 @@ public class FrmContador extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalir1ActionPerformed
+    private void btnRegPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegPagoActionPerformed
+        int filaSeleccionada = tblResultados.getSelectedRow();
 
-    private void btnSalir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalir2ActionPerformed
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un empleado de la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String dniEmpleado = tblResultados.getValueAt(filaSeleccionada, 0).toString();
+        Usuario empleadoAPagar = sistema.buscarUsuarioPorDNI(dniEmpleado);
+
+        if (empleadoAPagar == null) {
+            JOptionPane.showMessageDialog(this, "No se encontró el empleado.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            double monto = Double.parseDouble(txtMonto.getText());
+
+            sistema.registrarPagoPersonal(usuarioLogueado, empleadoAPagar, monto);
+
+            String montoFormateado = String.format("S/ %,.2f", monto);
+
+            JOptionPane.showMessageDialog(this, "Pago de " + montoFormateado + " registrado exitosamente para " + empleadoAPagar.getNombre() + ".");
+
+            txtMonto.setText("");
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un monto válido.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnRegPagoActionPerformed
+
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        String reporteFinanciero = sistema.generarReporteFinanciero();
+        String reporteGlobal = sistema.generarReporteGlobal();
+
+        txaReporte.setText(reporteFinanciero + "\n" + reporteGlobal);
+    }//GEN-LAST:event_btnReporteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -247,16 +295,16 @@ public class FrmContador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRegPago;
+    private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JButton btnSalir1;
-    private javax.swing.JButton btnSalir2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblPNG;
+    private javax.swing.JTable tblResultados;
+    private javax.swing.JTextArea txaReporte;
+    private javax.swing.JTextField txtMonto;
     // End of variables declaration//GEN-END:variables
 }

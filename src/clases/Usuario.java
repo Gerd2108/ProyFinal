@@ -1,6 +1,8 @@
 package clases;
 
 import interfaces.Rol;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Usuario {
 
@@ -10,6 +12,7 @@ public class Usuario {
     private String apellido;
     private String clave;
     private Rol rol;
+    private List<String> asistencia = new ArrayList<>();
     
 
     public Usuario() {}
@@ -70,6 +73,16 @@ public class Usuario {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+
+    public List<String> getAsistencia() {
+        return asistencia;
+    }
+
+    public void setAsistencia(List<String> asistencia) {
+        this.asistencia = asistencia;
+    }
+    
+    
 
     public void mostrarMenu() {
         rol.mostrarMenu();

@@ -26,6 +26,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         initComponents();
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
+        cargarRegistrosAsistencia();
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
 
@@ -172,6 +173,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Error: No se pudo registrar la entrada.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        cargarRegistrosAsistencia();
 
     }//GEN-LAST:event_btnRegistrarEntradaActionPerformed
 
@@ -192,6 +194,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Error: No se pudo registrar la salida.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        cargarRegistrosAsistencia();
     }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
