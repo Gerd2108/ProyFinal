@@ -22,12 +22,28 @@ public class FrmInvitado extends javax.swing.JFrame {
     private Usuario usuarioLogueado;
     private Sistema sistema;
 
+    private void cargarPersonalEnTabla() {
+        String[] columnas = {"Nombre", "Apellido", "Rol"};
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
+
+        for (clases.Usuario u : sistema.getUsuarios()) {
+            Object[] fila = {
+                u.getNombre(),
+                u.getApellido(),
+                u.getRol().getNombreRol()
+            };
+            modelo.addRow(fila);
+        }
+        jTable1.setModel(modelo);
+    }
+
     public FrmInvitado(Usuario usuario, Sistema sistema) {
         initComponents();
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+        cargarPersonalEnTabla();
 
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);

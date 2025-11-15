@@ -44,6 +44,28 @@ public class FrmLogin extends javax.swing.JFrame {
                     btnMostrarClave.setEnabled(true);
                 }
             }
+
+        });
+        this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                int opcion = JOptionPane.showConfirmDialog(
+                        FrmLogin.this,
+                        "¿Seguro que deseas salir de la aplicación?",
+                        "Confirmar salida",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (opcion == JOptionPane.YES_OPTION) {
+
+                    System.out.println("Guardando datos antes de salir...");
+                    sistema.guardarDatos();
+                    System.exit(0);
+                }
+
+            }
         });
     }
 

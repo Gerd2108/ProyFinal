@@ -66,9 +66,9 @@ public class FrmSecretaria extends javax.swing.JFrame {
         lblBienvenida = new javax.swing.JLabel();
         lblPNG = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
-        btnSalir1 = new javax.swing.JButton();
-        btnSalir2 = new javax.swing.JButton();
-        btnSalir3 = new javax.swing.JButton();
+        btnRegistrarSalida = new javax.swing.JButton();
+        btnCuentasCompro = new javax.swing.JButton();
+        btnRegistrarEntrada = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
@@ -83,11 +83,26 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
         btnSalir.setText("CERRAR SESION");
 
-        btnSalir1.setText("REGISTRAR SALIDA");
+        btnRegistrarSalida.setText("REGISTRAR SALIDA");
+        btnRegistrarSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarSalidaActionPerformed(evt);
+            }
+        });
 
-        btnSalir2.setText("VER CUENTAS/COMPROBANTES");
+        btnCuentasCompro.setText("VER CUENTAS/COMPROBANTES");
+        btnCuentasCompro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentasComproActionPerformed(evt);
+            }
+        });
 
-        btnSalir3.setText("REGISTRAR ENTRADA");
+        btnRegistrarEntrada.setText("REGISTRAR ENTRADA");
+        btnRegistrarEntrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarEntradaActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setToolTipText("c");
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Comprobantes"));
@@ -124,10 +139,10 @@ public class FrmSecretaria extends javax.swing.JFrame {
                         .addComponent(jScrollPane1)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSalir2)
+                            .addComponent(btnCuentasCompro)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnSalir3, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                                .addComponent(btnSalir1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                                .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGap(20, 20, 20))
         );
@@ -148,11 +163,11 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(95, Short.MAX_VALUE)
-                .addComponent(btnSalir2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCuentasCompro, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSalir3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSalir1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
@@ -161,6 +176,47 @@ public class FrmSecretaria extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(743, 540));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegistrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarEntradaActionPerformed
+        String dni = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el DNI del personal para registrar ENTRADA:");
+
+        if (dni != null && !dni.isEmpty()) {
+            clases.Usuario usuario = sistema.buscarUsuarioPorDNI(dni);
+
+            if (usuario != null) {
+                sistema.registrarAsistencia(usuario, "ENTRADA (Registrado por Secretaria)");
+                javax.swing.JOptionPane.showMessageDialog(this, "Entrada registrada para: " + usuario.getNombre());
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnRegistrarEntradaActionPerformed
+
+    private void btnRegistrarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarSalidaActionPerformed
+        String dni = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el DNI del personal para registrar SALIDA:");
+
+        if (dni != null && !dni.isEmpty()) {
+            clases.Usuario usuario = sistema.buscarUsuarioPorDNI(dni);
+
+            if (usuario != null) {
+                sistema.registrarAsistencia(usuario, "SALIDA (Registrado por Secretaria)");
+                javax.swing.JOptionPane.showMessageDialog(this, "Salida registrada para: " + usuario.getNombre());
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Usuario no encontrado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
+
+    private void btnCuentasComproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentasComproActionPerformed
+        javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
+
+        modelo.addElement("--- RESUMEN FINANCIERO ---");
+        modelo.addElement(sistema.generarReporteFinanciero());
+        modelo.addElement("Total Empleados: " + sistema.getUsuarios().size());
+        modelo.addElement("Total Productos: " + sistema.getInventario().getListaProductos().size());
+
+        jList1.setModel(modelo);
+    }//GEN-LAST:event_btnCuentasComproActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,10 +262,10 @@ public class FrmSecretaria extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCuentasCompro;
+    private javax.swing.JButton btnRegistrarEntrada;
+    private javax.swing.JButton btnRegistrarSalida;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JButton btnSalir1;
-    private javax.swing.JButton btnSalir2;
-    private javax.swing.JButton btnSalir3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;

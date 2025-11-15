@@ -19,6 +19,46 @@ public class Alquiler implements Operacion {
         this.dias = dias;
     }
 
+    public int getIdAlquiler() {
+        return idAlquiler;
+    }
+
+    public void setIdAlquiler(int idAlquiler) {
+        this.idAlquiler = idAlquiler;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+    public double getPrecioPorDia() {
+        return precioPorDia;
+    }
+
+    public void setPrecioPorDia(double precioPorDia) {
+        this.precioPorDia = precioPorDia;
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
+    }
+
     @Override
     public double calcularTotal() {
         return productos.size() * precioPorDia * dias;

@@ -36,8 +36,8 @@
                       <Component id="jScrollPane1" min="-2" pref="526" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnSalir1" max="32767" attributes="0"/>
-                          <Component id="btnSalir2" pref="192" max="32767" attributes="0"/>
+                          <Component id="btnActPersonal" max="32767" attributes="0"/>
+                          <Component id="btnInventario" pref="192" max="32767" attributes="0"/>
                           <Component id="btnSalir" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -71,9 +71,9 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="19" max="32767" attributes="0"/>
-                      <Component id="btnSalir1" min="-2" pref="92" max="-2" attributes="0"/>
+                      <Component id="btnActPersonal" min="-2" pref="92" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnSalir2" min="-2" pref="92" max="-2" attributes="0"/>
+                      <Component id="btnInventario" min="-2" pref="92" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnSalir" min="-2" pref="92" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -122,15 +122,21 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="btnSalir1">
+    <Component class="javax.swing.JButton" name="btnActPersonal">
       <Properties>
         <Property name="text" type="java.lang.String" value="ACTUALIZAR PERSONAL"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActPersonalActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnSalir2">
+    <Component class="javax.swing.JButton" name="btnInventario">
       <Properties>
         <Property name="text" type="java.lang.String" value="ACTUALIZAR INVENTARIO"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInventarioActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

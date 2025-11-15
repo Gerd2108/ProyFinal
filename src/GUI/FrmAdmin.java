@@ -29,6 +29,15 @@ public class FrmAdmin extends javax.swing.JFrame {
         this.sistema = sistema;
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+        jTextArea1.setText(sistema.generarReporteGlobal());
+        jTextArea1.setEditable(false);
+
+        javax.swing.DefaultListModel<String> listModel = new javax.swing.DefaultListModel<>();
+        listModel.addElement("--- Lista de Personal Registrado ---");
+        for (clases.Usuario u : sistema.getUsuarios()) {
+            listModel.addElement(u.getDni() + " - " + u.getNombre() + " (" + u.getRol().getNombreRol() + ")");
+        }
+        jList1.setModel(listModel);
 
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);

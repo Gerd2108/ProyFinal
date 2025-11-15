@@ -1,5 +1,10 @@
 package clases;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import interfaces.Rol;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +17,17 @@ public class Sistema {
 
     public Sistema() {
 
-        usuarios.add(new Usuario(1, "12345678", "María", "Pérez", "admin1", new Administrador()));
-        usuarios.add(new Usuario(2, "87654321", "Juan", "Lopez", "trabajador1", new Trabajador()));
-        usuarios.add(new Usuario(3, "11223344", "Ana", "Torres", "invitado1", new Invitado()));
-        usuarios.add(new Usuario(4, "74769138", "Maria", "Luna", "secretaria1", new Secretaria()));
+        cargarDatos();
 
-        usuarios.add(new Usuario(5, "99887766", "Carlos", "Ruiz", "encargado1", new Encargado()));
-        usuarios.add(new Usuario(6, "66778899", "Luisa", "Mendez", "contadora1", new Contadora()));
+        if (usuarios.isEmpty()) {
+            System.out.println("Generando usuarios por defecto...");
+            usuarios.add(new Usuario(1, "12345678", "María", "Pérez", "admin1", new Administrador()));
+            usuarios.add(new Usuario(2, "87654321", "Juan", "Lopez", "trabajador1", new Trabajador()));
+            usuarios.add(new Usuario(3, "11223344", "Ana", "Torres", "invitado1", new Invitado()));
+            usuarios.add(new Usuario(4, "74769138", "Maria", "Luna", "secretaria1", new Secretaria()));
+            usuarios.add(new Usuario(5, "99887766", "Carlos", "Ruiz", "encargado1", new Encargado()));
+            usuarios.add(new Usuario(6, "66778899", "Luisa", "Mendez", "contadora1", new Contadora()));
+        }
 
     }
 
@@ -125,5 +134,88 @@ public class Sistema {
         }
         System.out.println("Calculando ingresos totales...");
         return total;
+    }
+
+    public void guardarDatos() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("alquileres.txt"))) {
+            for (Alquiler a : alquileres) {
+                String idsProductos = "";
+                for (Producto p : a.getProductos()) {
+                    idsProductos += p.getIdProducto() + ";";
+                }
+                if (!idsProductos.isEmpty()) {
+                    idsProductos = idsProductos.substring(0, idsProductos.length() - 1);
+                }
+
+                String linea = String.join(",",
+                        String.valueOf(a.getIdAlquiler()),
+                        a.getUsuario().getDni(),
+                        String.valueOf(a.getPrecioPorDia()),
+                        String.valueOf(a.getDias()),
+                        idsProductos
+                );
+                bw.write(linea);
+                bw.newLine();
+            }
+            System.out.println("Alquileres guardados exitosamente.");
+        } catch (IOException e) {
+            System.err.println("Error al guardar alquileres: " + e.getMessage());
+        }
+    }
+
+    private void cargarDatos() {
+
+        try (BufferedReader br = new BufferedReader(new FileReader("alquileres.txt"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(",");
+                if (datos.length == 5) {
+                    int id = Integer.parseInt(datos[0]);
+                    Usuario usuario = buscarUsuarioPorDNI(datos[1]);
+                    double precioDia = Double.parseDouble(datos[2]);
+                    int dias = Integer.parseInt(datos[3]);
+                    String[] idsProductos = datos[4].split(";");
+
+                    List<Producto> productosAlquilados = new ArrayList<>();
+                    for (String idProd : idsProductos) {
+                        Producto p = inventario.buscarProducto(Integer.parseInt(idProd));
+                        if (p != null) {
+                            productosAlquilados.add(p);
+                        }
+                    }
+
+                    if (usuario != null) {
+                        alquileres.add(new Alquiler(id, usuario, productosAlquilados, precioDia, dias));
+                    }
+                }
+            }
+            System.out.println("Alquileres cargados: " + alquileres.size());
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("No se encontró 'alquileres.txt' o está corrupto.");
+        }
+    }
+
+    private Rol getRolPorNombre(String nombreRol) {
+        switch (nombreRol.toLowerCase()) {
+            case "administrador":
+                return new Administrador();
+            case "contadora":
+                return new Contadora();
+            case "encargado":
+                return new Encargado();
+            case "secretaria":
+                return new Secretaria();
+            case "trabajador":
+                return new Trabajador();
+            case "invitado":
+                return new Invitado();
+            default:
+                return new Invitado();
+        }
+    }
+
+    public void agregarAlquiler(Alquiler alquiler) {
+        this.alquileres.add(alquiler);
+        System.out.println("Alquiler registrado para: " + alquiler.getUsuario().getNombre());
     }
 }
