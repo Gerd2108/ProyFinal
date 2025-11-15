@@ -13,8 +13,32 @@ public class FrmRegistrar extends javax.swing.JFrame {
     /**
      * Creates new form FrmRegistrar
      */
+    private clases.Sistema sistema;
+
     public FrmRegistrar() {
         initComponents();
+    }
+
+    public FrmRegistrar(clases.Sistema sistema) {
+        initComponents();
+        this.sistema = sistema;
+        this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+
+        chkInvitado.addActionListener(e -> {
+            if (chkInvitado.isSelected()) {
+
+                txtContraseña.setText("");
+                txtContraseña.setEnabled(false);
+                cbRol.setEnabled(false);
+            } else {
+                txtContraseña.setEnabled(true);
+                cbRol.setEnabled(true);
+            }
+        });
+
+        btnSalir.addActionListener(e -> {
+            this.dispose();
+        });
     }
 
     /**
@@ -56,6 +80,11 @@ public class FrmRegistrar extends javax.swing.JFrame {
         cbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Contador", "Encargado", "Secretaria", "Trabajador" }));
 
         btnRegistrar.setText("REGISTRAR");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
         btnSalir.setText("SALIR");
 
@@ -118,8 +147,63 @@ public class FrmRegistrar extends javax.swing.JFrame {
                 .addGap(48, 48, 48))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(909, 547));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        String dni = txtDNI.getText().trim();
+        String pass = txtContraseña.getText().trim();
+        String rolString = cbRol.getSelectedItem().toString();
+        boolean esInvitado = chkInvitado.isSelected();
+
+        if (dni.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El DNI es obligatorio.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (pass.isEmpty() && !esInvitado) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La contraseña es obligatoria si no es Invitado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        interfaces.Rol rol;
+        if (esInvitado) {
+            rol = new clases.Invitado();
+            pass = "invitado123";
+        } else {
+            switch (rolString) {
+                case "Administrador":
+                    rol = new clases.Administrador();
+                    break;
+                case "Contador":
+                    rol = new clases.Contadora();
+                    break;
+                case "Encargado":
+                    rol = new clases.Encargado();
+                    break;
+                case "Secretaria":
+                    rol = new clases.Secretaria();
+                    break;
+                case "Trabajador":
+                default:
+                    rol = new clases.Trabajador();
+                    break;
+            }
+        }
+
+        int nuevoId = sistema.getUsuarios().size() + 1;
+        clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, "Nuevo", "Usuario", pass, rol);
+
+        if (sistema.agregarUsuario(nuevoUsuario)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " (" + rol.getNombreRol() + ") registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            txtDNI.setText("");
+            txtContraseña.setText("");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al registrar el usuario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
      * @param args the command line arguments

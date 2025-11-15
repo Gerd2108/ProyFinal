@@ -18,11 +18,16 @@ import javax.swing.ImageIcon;
  */
 public class FrmLogin extends javax.swing.JFrame {
 
-    private Sistema sistema = new Sistema();
+    private Sistema sistema;
     private boolean mostrarClave = false;
 
     public FrmLogin() {
+        this(new Sistema());
+    }
+
+    public FrmLogin(Sistema sistema) {
         initComponents();
+        this.sistema = sistema;
 
         chkInvitado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -203,23 +208,23 @@ public class FrmLogin extends javax.swing.JFrame {
 
             switch (nombreRol.toLowerCase()) {
                 case "administrador":
-                    new FrmAdmin(usuario,sistema).setVisible(true);
+                    new FrmAdmin(usuario, sistema).setVisible(true);
                     break;
                 case "contadora":
-                    new FrmContador(usuario,sistema).setVisible(true);
+                    new FrmContador(usuario, sistema).setVisible(true);
                     break;
                 case "encargado":
-                    new FrmEncargado(usuario,sistema).setVisible(true);
+                    new FrmEncargado(usuario, sistema).setVisible(true);
                     break;
                 case "secretaria":
-                    new FrmSecretaria(usuario,sistema).setVisible(true);
+                    new FrmSecretaria(usuario, sistema).setVisible(true);
                     break;
                 case "trabajador":
-                    new FrmTrabajador(usuario,sistema).setVisible(true);
+                    new FrmTrabajador(usuario, sistema).setVisible(true);
                     break;
                 case "invitado":
                     if (chkInvitado.isSelected() || sistema.buscarUsuarioPorDNI(dni) != null && "invitado".equalsIgnoreCase(sistema.buscarUsuarioPorDNI(dni).getRol().getNombreRol())) {
-                        new FrmInvitado(usuario,sistema).setVisible(true);
+                        new FrmInvitado(usuario, sistema).setVisible(true);
                     } else {
 
                         JOptionPane.showMessageDialog(this, "Error al intentar ingresar como invitado.");

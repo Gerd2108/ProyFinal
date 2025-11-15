@@ -44,16 +44,15 @@ public class FrmInvitado extends javax.swing.JFrame {
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
                 dispose();
-                FrmLogin login = new FrmLogin();
+                FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);
             }
         });
     }
 
-    public FrmInvitado (){
-    initComponents();
+    public FrmInvitado() {
+        initComponents();
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.

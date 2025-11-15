@@ -62,7 +62,7 @@ public class FrmContador extends javax.swing.JFrame {
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
                 dispose();
-                FrmLogin login = new FrmLogin();
+                FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);
             }
         });

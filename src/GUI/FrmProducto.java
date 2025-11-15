@@ -13,8 +13,18 @@ public class FrmProducto extends javax.swing.JFrame {
     /**
      * Creates new form FrmProducto
      */
+    private clases.Sistema sistema;
+
     public FrmProducto() {
         initComponents();
+    }
+
+    public FrmProducto(clases.Sistema sistema) {
+        initComponents();
+        this.sistema = sistema;
+        this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+
+        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Estructuras", "Equipos", "Decoración", "Otros"}));
     }
 
     /**
@@ -45,6 +55,11 @@ public class FrmProducto extends javax.swing.JFrame {
         cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnRegistrar.setText("REGISTRAR");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -95,8 +110,36 @@ public class FrmProducto extends javax.swing.JFrame {
                 .addContainerGap(102, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(694, 552));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        try {
+            String idStr = txtID.getText().trim();
+            String nombre = txtNombre.getText().trim();
+
+            if (idStr.isEmpty() || nombre.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "ID y Nombre son obligatorios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int id = Integer.parseInt(idStr);
+            String categoria = cbCategoria.getSelectedItem().toString();
+
+            clases.Producto nuevoProducto = new clases.Producto(id, nombre, categoria);
+
+            sistema.getInventario().agregarProducto(nuevoProducto);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Producto '" + nombre + "' registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            txtID.setText("");
+            txtNombre.setText("");
+
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El ID debe ser un número válido.", "Error de Formato", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
      * @param args the command line arguments

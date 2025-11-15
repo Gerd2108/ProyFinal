@@ -26,9 +26,9 @@ public class FrmEncargado extends javax.swing.JFrame {
         initComponents();
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
-        
+
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
-        
+
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
         }
@@ -44,7 +44,7 @@ public class FrmEncargado extends javax.swing.JFrame {
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
                 dispose();
-                FrmLogin login = new FrmLogin();
+                FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);
             }
         });
@@ -80,6 +80,11 @@ public class FrmEncargado extends javax.swing.JFrame {
         lblPNG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/encargado.png"))); // NOI18N
 
         btnSalir.setText("CERRAR SESION");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -146,6 +151,10 @@ public class FrmEncargado extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(783, 535));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments

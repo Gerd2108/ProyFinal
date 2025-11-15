@@ -35,17 +35,17 @@ public class FrmTrabajador extends javax.swing.JFrame {
         }
 
         btnSalir.addActionListener(e -> {
-            int opcion = JOptionPane.showConfirmDialog(
+            int opcion = javax.swing.JOptionPane.showConfirmDialog(
                     this,
                     "¿Seguro que deseas cerrar sesión?",
                     "Confirmar cierre de sesión",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
             );
 
-            if (opcion == JOptionPane.YES_OPTION) {
+            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
                 dispose();
-                FrmLogin login = new FrmLogin();
+                FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);
             }
         });
