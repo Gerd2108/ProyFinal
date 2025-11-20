@@ -4,6 +4,16 @@
  */
 package GUI;
 
+import clases.Alquiler;
+import clases.Producto;
+import clases.Sistema;
+import clases.Usuario;
+import java.awt.HeadlessException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author DIEGO
@@ -13,8 +23,68 @@ public class FrmAlquiler extends javax.swing.JFrame {
     /**
      * Creates new form FrmAlquiler
      */
+    private Sistema sistema;
+    private Usuario usuarioLogueado;
+    private DefaultTableModel modeloDisponibles;
+    private DefaultTableModel modeloCarrito;
+    private List<Producto> carrito = new ArrayList<>();
+
+    public FrmAlquiler(Usuario usuario, Sistema sistema) {
+        initComponents();
+        this.sistema = sistema;
+        this.usuarioLogueado = usuario;
+        this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        this.setTitle("Gestión de Alquileres - " + usuario.getNombre());
+
+        configurarTablas();
+        cargarProductosDisponibles();
+        cargarClientes();
+
+    }
+
     public FrmAlquiler() {
         initComponents();
+    }
+
+    private void configurarTablas() {
+        modeloDisponibles = new DefaultTableModel(new String[]{"ID", "Nombre", "Categoría"}, 0);
+        tblProductosDisponibles.setModel(modeloDisponibles);
+
+        modeloCarrito = new DefaultTableModel(new String[]{"ID", "Nombre", "Categoría"}, 0);
+        tblCarrito.setModel(modeloCarrito);
+    }
+
+    private void cargarProductosDisponibles() {
+        modeloDisponibles.setColumnIdentifiers(new String[]{"ID", "Nombre", "Precio", "Stock"});
+        modeloDisponibles.setRowCount(0);
+
+        for (Producto p : sistema.getInventario().getListaProductos()) {
+            modeloDisponibles.addRow(new Object[]{
+                p.getIdProducto(),
+                p.getNomProducto(),
+                p.getPrecio(),
+                p.getStock()
+            });
+        }
+    }
+
+    private void cargarClientes() {
+        cmbClientes.removeAllItems();
+        for (clases.Cliente c : sistema.getClientes()) {
+            cmbClientes.addItem(c.getDni() + ": " + c.getNombre() + " " + c.getApellido());
+        }
+    }
+
+    private void actualizarCarrito() {
+        modeloCarrito.setColumnIdentifiers(new String[]{"ID", "Nombre", "Precio"}); // <-- MODIFICADO
+        modeloCarrito.setRowCount(0);
+        for (Producto p : carrito) {
+            modeloCarrito.addRow(new Object[]{
+                p.getIdProducto(),
+                p.getNomProducto(),
+                p.getPrecio()
+            });
+        }
     }
 
     /**
@@ -36,9 +106,7 @@ public class FrmAlquiler extends javax.swing.JFrame {
         btnQuitar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         txtDias = new javax.swing.JTextField();
-        txtPrecioDia = new javax.swing.JTextField();
         cmbClientes = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -77,16 +145,34 @@ public class FrmAlquiler extends javax.swing.JFrame {
         jLabel1.setText("Cliente:");
 
         btnRegistrarAlquiler.setText("REGISTAR ALQUILER");
+        btnRegistrarAlquiler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarAlquilerActionPerformed(evt);
+            }
+        });
 
         btnAgregar.setText("AGREGAR");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnQuitar.setText("QUITAR");
+        btnQuitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuitarActionPerformed(evt);
+            }
+        });
 
         btnSalir.setText("SALIR");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Dias:");
-
-        jLabel3.setText("Precio:");
 
         cmbClientes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -109,20 +195,15 @@ public class FrmAlquiler extends javax.swing.JFrame {
                                 .addComponent(btnQuitar, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
                             .addComponent(btnRegistrarAlquiler, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbClientes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(249, 249, 249)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtDias))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(243, 243, 243)
-                                .addComponent(jLabel3)
-                                .addGap(7, 7, 7)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPrecioDia)
-                                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))))))
+                        .addGap(286, 286, 286)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)))
                 .addContainerGap(44, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDias, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,26 +215,126 @@ public class FrmAlquiler extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(txtDias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrarAlquiler)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPrecioDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2)
+                    .addComponent(txtDias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
+                .addComponent(btnRegistrarAlquiler)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnAgregar)
                         .addComponent(btnQuitar)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(807, 609));
+        setSize(new java.awt.Dimension(807, 676));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        int filaSeleccionada = tblProductosDisponibles.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para agregar.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idProducto = (int) modeloDisponibles.getValueAt(filaSeleccionada, 0);
+        Producto p = sistema.getInventario().buscarProducto(idProducto);
+
+        if (p != null) {
+            carrito.add(p);
+            actualizarCarrito();
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
+        int filaSeleccionada = tblCarrito.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para quitar.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        carrito.remove(filaSeleccionada);
+        actualizarCarrito();
+    }//GEN-LAST:event_btnQuitarActionPerformed
+
+    private void btnRegistrarAlquilerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAlquilerActionPerformed
+        if (carrito.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El carrito está vacío.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            int dias = Integer.parseInt(txtDias.getText());
+
+            for (Producto p : carrito) {
+                if (!p.hayStockDisponible(1)) {
+                    JOptionPane.showMessageDialog(this, "Stock insuficiente para: " + p.getNomProducto(), "Error de Stock", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            double precioCalculadoPorDia = 0;
+            for (Producto p : carrito) {
+                precioCalculadoPorDia += p.getPrecio();
+            }
+
+            String dniCliente = cmbClientes.getSelectedItem().toString().split(":")[0];
+            clases.Cliente cliente = sistema.buscarClientePorDNI(dniCliente);
+
+            if (cliente == null) {
+                JOptionPane.showMessageDialog(this, "Cliente no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            for (Producto p : carrito) {
+                p.reducirStock(1);
+            }
+
+            List<Producto> productosAlquilados = new ArrayList<>(carrito);
+            int nuevoId = sistema.getAlquileres().size() + 1;
+
+            Alquiler nuevoAlquiler = new Alquiler(nuevoId, cliente, productosAlquilados, precioCalculadoPorDia, dias); // <-- MODIFICADO
+            sistema.agregarAlquiler(nuevoAlquiler);
+            sistema.guardarDatos();
+
+            JOptionPane.showMessageDialog(this, "Alquiler registrado exitosamente.\nTotal: S/ " + nuevoAlquiler.calcularTotal());
+
+            FrmRecibo recibo = new FrmRecibo(nuevoAlquiler);
+            recibo.setVisible(true);
+
+            carrito.clear();
+            actualizarCarrito();
+            cargarProductosDisponibles();
+            txtDias.setText("");
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Los Días deben ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_btnRegistrarAlquilerActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        btnSalir.addActionListener(e -> {
+
+            int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Seguro que deseas salir?",
+                    "Confirmar salida",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                this.dispose();
+            }
+
+        });
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,12 +379,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbClientes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblCarrito;
     private javax.swing.JTable tblProductosDisponibles;
     private javax.swing.JTextField txtDias;
-    private javax.swing.JTextField txtPrecioDia;
     // End of variables declaration//GEN-END:variables
 }

@@ -53,6 +53,7 @@ public class FrmAdmin extends javax.swing.JFrame {
             );
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                sistema.guardarDatos();
                 dispose();
                 FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);
@@ -73,6 +74,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnSalir1 = new javax.swing.JButton();
         lblPNG = new javax.swing.JLabel();
         lblBienvenida = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -84,7 +86,15 @@ public class FrmAdmin extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         btnProductos = new javax.swing.JButton();
-        btnRegistroUsuarios = new javax.swing.JButton();
+        btnModificarUsuario = new javax.swing.JButton();
+        btnCrearUsuario = new javax.swing.JButton();
+
+        btnSalir1.setText("CERRAR SESIÓN");
+        btnSalir1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalir1ActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -127,10 +137,17 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnRegistroUsuarios.setText("CREAR O MODIFICAR USUARIO");
-        btnRegistroUsuarios.addActionListener(new java.awt.event.ActionListener() {
+        btnModificarUsuario.setText("MODIFICAR USUARIO");
+        btnModificarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistroUsuariosActionPerformed(evt);
+                btnModificarUsuarioActionPerformed(evt);
+            }
+        });
+
+        btnCrearUsuario.setText("CREAR USUARIO");
+        btnCrearUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearUsuarioActionPerformed(evt);
             }
         });
 
@@ -163,9 +180,10 @@ public class FrmAdmin extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnRegistroUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                            .addComponent(btnModificarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                             .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCrearUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))))
                 .addGap(0, 37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -190,18 +208,20 @@ public class FrmAdmin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnRegistroUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnModificarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCrearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(784, 567));
+        setSize(new java.awt.Dimension(784, 738));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -214,14 +234,73 @@ public class FrmAdmin extends javax.swing.JFrame {
         frmProd.setVisible(true);
     }//GEN-LAST:event_btnProductosActionPerformed
 
-    private void btnRegistroUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistroUsuariosActionPerformed
-        FrmRegistrar frmReg = new FrmRegistrar(this.sistema);
-        frmReg.setVisible(true);
-    }//GEN-LAST:event_btnRegistroUsuariosActionPerformed
+    private void btnModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuarioActionPerformed
+        int filaSeleccionada = jList1.getSelectedIndex();
+
+        // Validamos que se seleccione un usuario (y no el título "--- Lista ---")
+        if (filaSeleccionada <= 0) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario de la lista para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String seleccion = jList1.getSelectedValue();
+        String dni = seleccion.split(" - ")[0];
+
+        clases.Usuario usuario = sistema.buscarUsuarioPorDNI(dni);
+
+        if (usuario != null) {
+
+            FrmRegistrar frmReg = new FrmRegistrar(this.sistema, usuario);
+
+            frmReg.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    actualizarListaUsuarios();
+                    jTextArea1.setText(sistema.generarReporteGlobal());
+                }
+
+            });
+
+            frmReg.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar al usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnModificarUsuarioActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalir1ActionPerformed
+
+    private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
+        FrmRegistrar frmReg = new FrmRegistrar(this.sistema, null);
+
+        frmReg.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                actualizarListaUsuarios();
+                jTextArea1.setText(sistema.generarReporteGlobal());
+            }
+        });
+
+        frmReg.setVisible(true);
+    }//GEN-LAST:event_btnCrearUsuarioActionPerformed
+
+    private void actualizarListaUsuarios() {
+        javax.swing.DefaultListModel<String> listModel = new javax.swing.DefaultListModel<>();
+        listModel.addElement("--- Lista de Personal Registrado ---");
+
+        if (sistema != null && sistema.getUsuarios() != null) {
+            for (clases.Usuario u : sistema.getUsuarios()) {
+                listModel.addElement(u.getDni() + " - " + u.getNombre() + " (" + u.getRol().getNombreRol() + ")");
+            }
+        }
+
+        jList1.setModel(listModel);
+    }
 
     /**
      * @param args the command line arguments
@@ -268,9 +347,11 @@ public class FrmAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnCrearUsuario;
+    private javax.swing.JButton btnModificarUsuario;
     private javax.swing.JButton btnProductos;
-    private javax.swing.JButton btnRegistroUsuarios;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnSalir1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

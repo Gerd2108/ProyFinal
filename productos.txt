@@ -1,0 +1,3 @@
+103,Lona,Decoración,200.0,2
+104,Tubo,Estructuras,100.0,99
+105,Base,Estructuras,290.0,199

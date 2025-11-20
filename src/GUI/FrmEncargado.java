@@ -30,7 +30,9 @@ public class FrmEncargado extends javax.swing.JFrame {
             Object[] fila = {
                 p.getIdProducto(),
                 p.getNomProducto(),
-                p.getCatProducto()
+                p.getCatProducto(),
+                p.getPrecio(),
+                p.getStock()
             };
             modelo.addRow(fila);
         }
@@ -59,6 +61,7 @@ public class FrmEncargado extends javax.swing.JFrame {
             );
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                sistema.guardarDatos();
                 dispose();
                 FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);

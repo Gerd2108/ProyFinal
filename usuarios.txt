@@ -4,4 +4,6 @@
 74769138,Maria,Luna,secretaria1,Secretaria
 99887766,Carlos,Ruiz,encargado1,encargado
 66778899,Luisa,Mendez,contadora1,Contadora
-555,Nuevo,Usuario,1234567,Trabajador
+555,Miguel,Usuario,holi,Trabajador
+111,Luis,Usuario,hola,Trabajador
+123,Pablo,Usuario,123,Secretaria

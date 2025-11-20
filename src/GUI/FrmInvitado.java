@@ -59,6 +59,7 @@ public class FrmInvitado extends javax.swing.JFrame {
             );
 
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                sistema.guardarDatos();
                 dispose();
                 FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);

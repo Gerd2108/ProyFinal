@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import java.awt.HeadlessException;
+
 /**
  *
  * @author DIEGO
@@ -14,6 +16,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
      * Creates new form FrmRegistrar
      */
     private clases.Sistema sistema;
+    private clases.Usuario usuarioAEditar;
 
     public FrmRegistrar() {
         initComponents();
@@ -21,8 +24,38 @@ public class FrmRegistrar extends javax.swing.JFrame {
 
     public FrmRegistrar(clases.Sistema sistema) {
         initComponents();
+    }
+
+    public FrmRegistrar(clases.Sistema sistema, clases.Usuario usuario) {
+        initComponents();
         this.sistema = sistema;
+        this.usuarioAEditar = usuario;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+
+        if (usuarioAEditar != null) {
+
+            this.setTitle("Modificar Usuario");
+            jLabel2.setText("MODIFICAR USUARIO");
+            btnRegistrar.setText("GUARDAR CAMBIOS");
+
+            txtDNI.setText(usuario.getDni());
+            txtDNI.setEnabled(false);
+            txtNombre.setText(usuario.getNombre());
+            txtContraseña.setText(usuario.getClave());
+
+            cbRol.setSelectedItem(usuario.getRol().getNombreRol());
+
+            if (usuario.getRol() instanceof clases.Invitado) {
+                chkInvitado.setSelected(true);
+                txtContraseña.setEnabled(false);
+                cbRol.setEnabled(false);
+            }
+
+        } else {
+            this.setTitle("Registrar Usuario");
+            jLabel2.setText("REGISTRAR USUARIO");
+            btnRegistrar.setText("REGISTRAR");
+        }
 
         chkInvitado.addActionListener(e -> {
             if (chkInvitado.isSelected()) {
@@ -162,62 +195,85 @@ public class FrmRegistrar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+
         String dni = txtDNI.getText().trim();
+        String nombre = txtNombre.getText().trim();
         String pass = txtContraseña.getText().trim();
         String rolString = cbRol.getSelectedItem().toString();
         boolean esInvitado = chkInvitado.isSelected();
 
-        if (dni.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El DNI es obligatorio.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        if (dni.isEmpty() || nombre.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El DNI y el Nombre son obligatorios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         if (pass.isEmpty() && !esInvitado) {
             javax.swing.JOptionPane.showMessageDialog(this, "La contraseña es obligatoria si no es Invitado.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        interfaces.Rol rol;
+        interfaces.Rol rol = getRolDesdeString(rolString, esInvitado);
         if (esInvitado) {
-            rol = new clases.Invitado();
-            pass = "invitado123";
+            pass = "invitado123"; // Asigna clave por defecto a invitados
+        }
+
+        if (usuarioAEditar == null) {
+
+            int nuevoId = sistema.getUsuarios().size() + 1;
+            clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, nombre, "Usuario", pass, rol); // Asumimos apellido "Usuario"
+
+            if (sistema.agregarUsuario(nuevoUsuario)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " (" + rol.getNombreRol() + ") registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                limpiarCampos();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al registrar el usuario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         } else {
-            switch (rolString) {
-                case "Administrador":
-                    rol = new clases.Administrador();
-                    break;
-                case "Contador":
-                    rol = new clases.Contadora();
-                    break;
-                case "Encargado":
-                    rol = new clases.Encargado();
-                    break;
-                case "Secretaria":
-                    rol = new clases.Secretaria();
-                    break;
-                case "Trabajador":
-                default:
-                    rol = new clases.Trabajador();
-                    break;
+
+            usuarioAEditar.setNombre(nombre);
+            usuarioAEditar.setClave(pass);
+            usuarioAEditar.setRol(rol);
+            usuarioAEditar.setApellido("Usuario");
+
+            // Llamamos al método modificar de Sistema
+            if (sistema.modificarUsuario(dni, usuarioAEditar)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " modificado exitosamente.", "Modificación Exitosa", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al modificar el usuario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
 
-        int nuevoId = sistema.getUsuarios().size() + 1;
-        clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, "Nuevo", "Usuario", pass, rol);
-
-        if (sistema.agregarUsuario(nuevoUsuario)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " (" + rol.getNombreRol() + ") registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-            txtDNI.setText("");
-            txtContraseña.setText("");
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al registrar el usuario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    private void limpiarCampos() {
+        txtDNI.setText("");
+        txtNombre.setText("");
+        txtContraseña.setText("");
+    }
+
+    private interfaces.Rol getRolDesdeString(String rolString, boolean esInvitado) {
+        if (esInvitado) {
+            return new clases.Invitado();
+        }
+
+        switch (rolString) {
+            case "Administrador":
+                return new clases.Administrador();
+            case "Contador":
+                return new clases.Contadora();
+            case "Encargado":
+                return new clases.Encargado();
+            case "Secretaria":
+                return new clases.Secretaria();
+            case "Trabajador":
+            default:
+                return new clases.Trabajador();
+        }
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
