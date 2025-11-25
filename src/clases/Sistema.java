@@ -8,7 +8,7 @@ import java.io.IOException;
 import interfaces.Rol;
 import java.util.ArrayList;
 import java.util.List;
-import java.text.SimpleDateFormat; // Importación necesaria
+import java.text.SimpleDateFormat;
 
 public class Sistema {
 

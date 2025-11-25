@@ -461,7 +461,7 @@ public class FrmEncargado extends javax.swing.JFrame {
             historial.append("Este producto no registra salidas ni alquileres hasta el momento.");
         }
 
-        javax.swing.JTextArea area = new javax.swing.JTextArea(historial.toString());
+    javax.swing.JTextArea area = new javax.swing.JTextArea(historial.toString());
         area.setEditable(false);
         area.setRows(10);
         area.setColumns(40);
