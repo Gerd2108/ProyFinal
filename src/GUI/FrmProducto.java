@@ -18,13 +18,11 @@ public class FrmProducto extends javax.swing.JFrame {
     public FrmProducto() {
         initComponents();
     }
-    
-    
-    public FrmProducto(Producto producto ) {
+
+    public FrmProducto(Producto producto) {
         initComponents();
         this.productoAEditar = producto;
     }
-    
 
     public FrmProducto(Sistema sistema, Runnable onUpdate) {
         initComponents();
@@ -280,11 +278,9 @@ public class FrmProducto extends javax.swing.JFrame {
             int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar este producto?");
 
             if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-                // A. Eliminar del sistema
                 sistema.getInventario().eliminarProducto(productoAEditar.getIdProducto());
                 sistema.guardarDatos();
 
-                // B. IMPORTANTE: Ejecutar el aviso de actualización
                 if (onUpdateListener != null) {
                     onUpdateListener.run();
                 }
