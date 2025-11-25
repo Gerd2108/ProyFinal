@@ -50,7 +50,7 @@ public class FrmProducto extends javax.swing.JFrame {
             btnEliminar.setEnabled(true);
 
             txtID.setText(String.valueOf(producto.getIdProducto()));
-            txtID.setEnabled(false); // ID no editable
+            txtID.setEnabled(false);
             txtNombre.setText(producto.getNomProducto());
             txtPrecio.setText(String.valueOf(producto.getPrecio()));
             txtStock.setText(String.valueOf(producto.getStock()));
