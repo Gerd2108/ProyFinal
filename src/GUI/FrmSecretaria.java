@@ -109,8 +109,10 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
         lblPNG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/secretaria.png"))); // NOI18N
 
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/cerrarsesion.png"))); // NOI18N
         btnSalir.setText("CERRAR SESION");
 
+        btnRegistrarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
         btnRegistrarSalida.setText("REGISTRAR SALIDA");
         btnRegistrarSalida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,6 +120,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
             }
         });
 
+        btnCuentasCompro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/clavemostrar.png"))); // NOI18N
         btnCuentasCompro.setText("VER CUENTAS/COMPROBANTES");
         btnCuentasCompro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -125,6 +128,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
             }
         });
 
+        btnRegistrarEntrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
         btnRegistrarEntrada.setText("REGISTRAR ENTRADA");
         btnRegistrarEntrada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,6 +149,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
         jLabel1.setText("HORA: ");
 
+        btnAlquiler.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
         btnAlquiler.setText("REGISTRAR ALQUILER");
         btnAlquiler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
