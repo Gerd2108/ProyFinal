@@ -4,6 +4,16 @@
  */
 package GUI;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import java.awt.Desktop;
 import clases.Alquiler;
 import clases.Sistema;
 import clases.Usuario;
@@ -101,6 +111,8 @@ public class FrmSecretaria extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnDevolucion = new javax.swing.JButton();
         btnAlquiler = new javax.swing.JButton();
+        btnReporteGlobal = new javax.swing.JButton();
+        btnResumenDia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -166,6 +178,22 @@ public class FrmSecretaria extends javax.swing.JFrame {
             }
         });
 
+        btnReporteGlobal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/clavemostrar.png"))); // NOI18N
+        btnReporteGlobal.setText("REPORTE GLOBAL");
+        btnReporteGlobal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteGlobalActionPerformed(evt);
+            }
+        });
+
+        btnResumenDia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/clavemostrar.png"))); // NOI18N
+        btnResumenDia.setText("RESUMEN POR DIA");
+        btnResumenDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResumenDiaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -191,7 +219,9 @@ public class FrmSecretaria extends javax.swing.JFrame {
                     .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAlquiler, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAlquiler, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnReporteGlobal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnResumenDia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -221,11 +251,15 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnDevolucion, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnResumenDia, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnReporteGlobal, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(743, 681));
+        setSize(new java.awt.Dimension(743, 876));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -294,6 +328,117 @@ public class FrmSecretaria extends javax.swing.JFrame {
         frmAlq.setVisible(true);
     }//GEN-LAST:event_btnAlquilerActionPerformed
 
+    private void btnReporteGlobalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteGlobalActionPerformed
+        try {
+            String nombreArchivo = "Reporte_Global_Alquileres_" + System.currentTimeMillis() + ".pdf";
+            File archivo = new File(nombreArchivo);
+
+            generarPDFGlobal(archivo);
+
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnReporteGlobalActionPerformed
+
+    private void btnResumenDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResumenDiaActionPerformed
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String hoy = sdf.format(new Date());
+
+            String nombrePDF = "Cierre_Caja_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".pdf";
+
+            org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument();
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            doc.addPage(page);
+
+            org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 18);
+            content.beginText();
+            content.newLineAtOffset(50, 750);
+            content.showText("REPORTE DIARIO DE CAJA - DAL ESTRUCTURAS");
+            content.endText();
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 12);
+            content.beginText();
+            content.newLineAtOffset(50, 730);
+            content.showText("Fecha de Cierre: " + hoy);
+            content.endText();
+
+            int y = 700;
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER_BOLD), 10);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText(String.format("%-5s %-35s %-15s %-10s", "ID", "CLIENTE", "HORA", "TOTAL"));
+            content.endText();
+            y -= 15;
+            content.moveTo(50, y + 10);
+            content.lineTo(550, y + 10);
+            content.stroke();
+
+            double totalDia = 0;
+            int conteo = 0;
+            SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 10);
+
+            for (clases.Alquiler alq : sistema.getAlquileres()) {
+
+                if (alq.getFecha() != null && sdf.format(alq.getFecha()).equals(hoy)) {
+
+                    double monto = alq.calcularTotal();
+                    totalDia += monto;
+                    conteo++;
+
+                    String cliente = alq.getCliente().getNombre() + " " + alq.getCliente().getApellido();
+                    if (cliente.length() > 30) {
+                        cliente = cliente.substring(0, 28) + "..";
+                    }
+
+                    String linea = String.format("%-5d %-35s %-15s %8.2f",
+                            alq.getIdAlquiler(),
+                            cliente,
+                            sdfHora.format(alq.getFecha()),
+                            monto);
+
+                    content.beginText();
+                    content.newLineAtOffset(50, y);
+                    content.showText(linea);
+                    content.endText();
+                    y -= 15;
+                }
+            }
+
+            y -= 20;
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 14);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText("Total Transacciones: " + conteo);
+            content.endText();
+
+            content.beginText();
+            content.newLineAtOffset(300, y);
+            content.showText("TOTAL S/: " + String.format("%.2f", totalDia));
+            content.endText();
+
+            content.close();
+            doc.save(nombrePDF);
+            doc.close();
+
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop.getDesktop().open(new java.io.File(nombrePDF));
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "PDF Generado: " + nombrePDF);
+            }
+
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error generando PDF: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnResumenDiaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -343,6 +488,8 @@ public class FrmSecretaria extends javax.swing.JFrame {
     private javax.swing.JButton btnDevolucion;
     private javax.swing.JButton btnRegistrarEntrada;
     private javax.swing.JButton btnRegistrarSalida;
+    private javax.swing.JButton btnReporteGlobal;
+    private javax.swing.JButton btnResumenDia;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
@@ -350,4 +497,71 @@ public class FrmSecretaria extends javax.swing.JFrame {
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblPNG;
     // End of variables declaration//GEN-END:variables
+
+    private void generarPDFGlobal(File archivo) throws IOException {
+        try (PDDocument doc = new PDDocument()) {
+            PDPage page = new PDPage();
+            doc.addPage(page);
+
+            try (PDPageContentStream content = new PDPageContentStream(doc, page)) {
+
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 16);
+                content.beginText();
+                content.newLineAtOffset(50, 750);
+                content.showText("REPORTE GENERAL DE ALQUILERES - DAL ESTRUCTURAS");
+                content.endText();
+
+                int y = 700;
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(String.format("%-5s %-30s %-15s %-10s", "ID", "CLIENTE", "ESTADO", "MONTO"));
+                content.endText();
+
+                y -= 10;
+                content.moveTo(50, y);
+                content.lineTo(550, y);
+                content.stroke();
+                y -= 15;
+
+                double totalGeneral = 0;
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
+
+                for (clases.Alquiler a : sistema.getAlquileres()) {
+                    double monto = a.calcularTotal();
+                    totalGeneral += monto;
+
+                    String linea = String.format("%-5d %-30s %-15s S/%8.2f",
+                            a.getIdAlquiler(),
+                            recortar(a.getCliente().getNombre(), 30),
+                            "REGISTRADO",
+                            monto);
+
+                    content.beginText();
+                    content.newLineAtOffset(50, y);
+                    content.showText(linea);
+                    content.endText();
+                    y -= 15;
+
+                    if (y < 50) {
+                    }
+                }
+
+                y -= 20;
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+                content.beginText();
+                content.newLineAtOffset(350, y);
+                content.showText("TOTAL INGRESOS: S/ " + String.format("%.2f", totalGeneral));
+                content.endText();
+            }
+            doc.save(archivo);
+        }
+    }
+
+    private String recortar(String texto, int max) {
+        if (texto == null) {
+            return "";
+        }
+        return texto.length() > max ? texto.substring(0, max - 3) + "..." : texto;
+    }
 }

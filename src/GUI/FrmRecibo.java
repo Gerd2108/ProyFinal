@@ -5,6 +5,7 @@
 package GUI;
 
 import clases.Sistema;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class FrmRecibo extends javax.swing.JFrame {
         this.alquiler = alquiler;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         this.setTitle("Recibo de Alquiler - ID: " + alquiler.getIdAlquiler());
-        
+
         this.setLocationRelativeTo(null);
 
         txaRecibo.setFont(new Font("Courier New", Font.PLAIN, 12));
@@ -63,6 +64,7 @@ public class FrmRecibo extends javax.swing.JFrame {
         btnExportarPDF = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        brnAbrirPDF = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
@@ -92,6 +94,14 @@ public class FrmRecibo extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/logohd.jpg"))); // NOI18N
 
+        brnAbrirPDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/descargar.png"))); // NOI18N
+        brnAbrirPDF.setText("ABRIR PDF");
+        brnAbrirPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brnAbrirPDFActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,13 +109,18 @@ public class FrmRecibo extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                        .addComponent(btnExportarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnExportarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(brnAbrirPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(101, 101, 101))))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -118,11 +133,13 @@ public class FrmRecibo extends javax.swing.JFrame {
                         .addGap(33, 33, 33)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnExportarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(brnAbrirPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel1)))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(848, 720));
@@ -136,6 +153,25 @@ public class FrmRecibo extends javax.swing.JFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void brnAbrirPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnAbrirPDFActionPerformed
+        try {
+
+            File tempFile = File.createTempFile("Recibo_" + alquiler.getIdAlquiler() + "_", ".pdf");
+            tempFile.deleteOnExit();
+
+            generarArchivoPDF(tempFile, txaRecibo.getText());
+
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(tempFile);
+            } else {
+                JOptionPane.showMessageDialog(this, "Su sistema no soporta la apertura automática de archivos.", "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al abrir el PDF: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_brnAbrirPDFActionPerformed
 
     /**
      * @param args the command line arguments
@@ -173,6 +209,7 @@ public class FrmRecibo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton brnAbrirPDF;
     private javax.swing.JButton btnCerrar1;
     private javax.swing.JButton btnExportarPDF;
     private javax.swing.JButton btnSalir;
@@ -220,6 +257,34 @@ public class FrmRecibo extends javax.swing.JFrame {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error al guardar el PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    private void generarArchivoPDF(File tempFile, String text) throws IOException {
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+
+                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, 750);
+                contentStream.setLeading(12f);
+
+                String[] lineas = text.split("\n");
+
+                for (String linea : lineas) {
+
+                    if (linea != null) {
+                        contentStream.showText(linea);
+                    }
+                    contentStream.newLine();
+                }
+
+                contentStream.endText();
+            }
+            document.save(tempFile);
         }
     }
 }

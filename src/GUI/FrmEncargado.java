@@ -4,6 +4,16 @@
  */
 package GUI;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import clases.Sistema;
 import clases.Usuario;
 import java.awt.HeadlessException;
@@ -137,6 +147,8 @@ public class FrmEncargado extends javax.swing.JFrame {
         btnMasStock = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
+        btnReporte = new javax.swing.JButton();
+        btnHistorial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -201,6 +213,22 @@ public class FrmEncargado extends javax.swing.JFrame {
             }
         });
 
+        btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/actualizar.png"))); // NOI18N
+        btnReporte.setText("REPORTE");
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+
+        btnHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/actualizar.png"))); // NOI18N
+        btnHistorial.setText("HISTORIAL");
+        btnHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistorialActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -224,12 +252,14 @@ public class FrmEncargado extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnInventario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnActPersonal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnMasStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnInventario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                            .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnReporte, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMasStock, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnActPersonal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnHistorial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +278,9 @@ public class FrmEncargado extends javax.swing.JFrame {
                             .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnActPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -256,12 +288,15 @@ public class FrmEncargado extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnMasStock, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(22, 22, 22))))
         );
 
-        setSize(new java.awt.Dimension(799, 611));
+        setSize(new java.awt.Dimension(872, 840));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -375,6 +410,64 @@ public class FrmEncargado extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtBuscarKeyReleased
 
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        try {
+            String nombreArchivo = "Reporte_Inventario_" + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".pdf";
+            File archivo = new File(nombreArchivo);
+
+            generarPDFInventario(archivo);
+
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Reporte guardado: " + nombreArchivo);
+            }
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_btnReporteActionPerformed
+
+    private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona un producto para ver sus movimientos.");
+            return;
+        }
+
+        int idProd = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+        String nombreProd = jTable1.getValueAt(fila, 1).toString();
+
+        StringBuilder historial = new StringBuilder();
+        historial.append("HISTORIAL DE MOVIMIENTOS: ").append(nombreProd).append("\n\n");
+
+        boolean tuvoMovimientos = false;
+
+        for (clases.Alquiler alq : sistema.getAlquileres()) {
+            for (clases.Producto p : alq.getProductos()) {
+
+                if (p.getIdProducto() == idProd) {
+                    historial.append("-> Alquiler N° ").append(alq.getIdAlquiler())
+                            .append(" | Cliente: ").append(alq.getCliente().getNombre())
+                            .append(" | Días: ").append(alq.getDias())
+                            .append("\n");
+                    tuvoMovimientos = true;
+                }
+            }
+        }
+
+        if (!tuvoMovimientos) {
+            historial.append("Este producto no registra salidas ni alquileres hasta el momento.");
+        }
+
+        javax.swing.JTextArea area = new javax.swing.JTextArea(historial.toString());
+        area.setEditable(false);
+        area.setRows(10);
+        area.setColumns(40);
+        javax.swing.JOptionPane.showMessageDialog(this, new javax.swing.JScrollPane(area), "Kardex del Producto", javax.swing.JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_btnHistorialActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -418,6 +511,87 @@ public class FrmEncargado extends javax.swing.JFrame {
         return retValue;
     }
 
+    private void generarPDFInventario(File archivo) throws IOException {
+        try (PDDocument doc = new PDDocument()) {
+            PDPage page = new PDPage();
+            doc.addPage(page);
+
+            try (PDPageContentStream content = new PDPageContentStream(doc, page)) {
+
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 18);
+                content.beginText();
+                content.newLineAtOffset(50, 750);
+                content.showText("REPORTE GENERAL DE INVENTARIO - DAL ESTRUCTURAS");
+                content.endText();
+
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
+                content.beginText();
+                content.newLineAtOffset(50, 735);
+                content.showText("Fecha de emisión: " + new Date().toString());
+                content.endText();
+
+                int y = 700;
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(String.format("%-5s %-35s %-15s %-10s %-10s", "ID", "PRODUCTO", "CATEGORÍA", "PRECIO", "STOCK"));
+                content.endText();
+
+                y -= 10;
+                content.moveTo(50, y);
+                content.lineTo(550, y);
+                content.stroke();
+                y -= 15;
+
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
+
+                for (clases.Producto p : sistema.getInventario().getListaProductos()) {
+                    if (y < 50) {
+                        content.close();
+                        PDPage newPage = new PDPage();
+                        doc.addPage(newPage);
+                        break;
+                    }
+
+                    content.beginText();
+                    content.newLineAtOffset(50, y);
+
+                    String linea = String.format("%-5d %-35s %-15s S/%-9.2f %-10d",
+                            p.getIdProducto(),
+                            recortar(p.getNomProducto(), 35),
+                            recortar(p.getCatProducto(), 15),
+                            p.getPrecio(),
+                            p.getStock());
+
+                    content.showText(linea);
+                    content.endText();
+
+                    if (p.getStock() < 5) {
+                        content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE), 10);
+                        content.beginText();
+                        content.newLineAtOffset(500, y);
+                        content.showText("(!)");
+                        content.endText();
+                        content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
+                    }
+
+                    y -= 15;
+                }
+            }
+            doc.save(archivo);
+        }
+    }
+
+    private String recortar(String texto, int max) {
+        if (texto == null) {
+            return "";
+        }
+        if (texto.length() <= max) {
+            return texto;
+        }
+        return texto.substring(0, max - 3) + "...";
+    }
+
     class StockAlertRenderer extends javax.swing.table.DefaultTableCellRenderer {
 
         @Override
@@ -444,8 +618,10 @@ public class FrmEncargado extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActPersonal;
+    private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnInventario;
     private javax.swing.JButton btnMasStock;
+    private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

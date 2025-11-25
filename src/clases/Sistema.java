@@ -8,6 +8,7 @@ import java.io.IOException;
 import interfaces.Rol;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat; // Importación necesaria
 
 public class Sistema {
 
@@ -380,8 +381,10 @@ public class Sistema {
             System.err.println("Error guardando clientes: " + e.getMessage());
         }
 
-        //Guardar Alquileres
+        // Guardar Alquileres
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("alquileres.txt"))) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            
             for (Alquiler a : alquileres) {
                 String idsProductos = "";
                 for (Producto p : a.getProductos()) {
@@ -390,13 +393,16 @@ public class Sistema {
                 if (!idsProductos.isEmpty()) {
                     idsProductos = idsProductos.substring(0, idsProductos.length() - 1);
                 }
+                
+                String fechaStr = (a.getFecha() != null) ? sdf.format(a.getFecha()) : sdf.format(new java.util.Date());
 
                 String linea = String.join(",",
                         String.valueOf(a.getIdAlquiler()),
                         a.getCliente().getDni(),
                         String.valueOf(a.getPrecioPorDia()),
                         String.valueOf(a.getDias()),
-                        idsProductos
+                        idsProductos,
+                        fechaStr
                 );
                 bw.write(linea);
                 bw.newLine();
@@ -486,17 +492,28 @@ public class Sistema {
             System.err.println("Info: 'clientes.txt' no encontrado.");
         }
 
-        //Cargar Alquileres
+        // Cargar Alquileres
         try (BufferedReader br = new BufferedReader(new FileReader("alquileres.txt"))) {
             String linea;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length == 5) {
+                if (datos.length >= 5) { 
                     int id = Integer.parseInt(datos[0]);
                     Cliente cliente = buscarClientePorDNI(datos[1]);
                     double precioDia = Double.parseDouble(datos[2]);
                     int dias = Integer.parseInt(datos[3]);
                     String[] idsProductos = datos[4].split(";");
+                    
+                    
+                    java.util.Date fecha = new java.util.Date();
+                    if(datos.length >= 6) {
+                        try {
+                            fecha = sdf.parse(datos[5]);
+                        } catch(Exception e) {                            
+                        }
+                    }
 
                     List<Producto> productosAlquilados = new ArrayList<>();
                     for (String idProd : idsProductos) {
@@ -506,13 +523,13 @@ public class Sistema {
                         }
                     }
 
-                    if (cliente != null) {
-                        alquileres.add(new Alquiler(id, cliente, productosAlquilados, precioDia, dias));
+                    if (cliente != null) {                        
+                        alquileres.add(new Alquiler(id, cliente, productosAlquilados, precioDia, dias, fecha));
                     }
                 }
             }
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Info: 'alquileres.txt' no encontrado.");
+        } catch (Exception e) {
+            System.err.println("Info: Error al cargar 'alquileres.txt'. " + e.getMessage());
         }
 
         System.out.println("Carga de datos completada.");
