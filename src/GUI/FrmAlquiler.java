@@ -314,9 +314,9 @@ public class FrmAlquiler extends javax.swing.JFrame {
             }
 
             List<Producto> productosAlquilados = new ArrayList<>(carrito);
-            int nuevoId = sistema.getAlquileres().size() + 1;
+            int nuevoId = sistema.generarNuevoIdAlquiler();
 
-            Alquiler nuevoAlquiler = new Alquiler(nuevoId, cliente, productosAlquilados, precioCalculadoPorDia, dias); // <-- MODIFICADO
+            Alquiler nuevoAlquiler = new Alquiler(nuevoId, cliente, productosAlquilados, precioCalculadoPorDia, dias); 
             sistema.agregarAlquiler(nuevoAlquiler);
             sistema.guardarDatos();
 

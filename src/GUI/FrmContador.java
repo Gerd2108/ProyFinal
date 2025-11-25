@@ -4,6 +4,9 @@
  */
 package GUI;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import clases.Sistema;
 import clases.Usuario;
 import java.awt.HeadlessException;
@@ -93,6 +96,7 @@ public class FrmContador extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        btnAbrirHistorial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -147,6 +151,14 @@ public class FrmContador extends javax.swing.JFrame {
 
         jLabel1.setText("INGRESE MONTO:");
 
+        btnAbrirHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/enviar.png"))); // NOI18N
+        btnAbrirHistorial.setText("HISTORIAL PAGOS");
+        btnAbrirHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirHistorialActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -178,7 +190,8 @@ public class FrmContador extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(btnRegPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAbrirHistorial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
@@ -198,7 +211,7 @@ public class FrmContador extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
@@ -206,11 +219,13 @@ public class FrmContador extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(btnAbrirHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 39, Short.MAX_VALUE))))
+                        .addGap(60, 60, 60))))
         );
 
-        setSize(new java.awt.Dimension(743, 572));
+        setSize(new java.awt.Dimension(743, 705));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -250,11 +265,37 @@ public class FrmContador extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegPagoActionPerformed
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-        String reporteFinanciero = sistema.generarReporteFinanciero();
-        String reporteGlobal = sistema.generarReporteGlobal();
 
-        txaReporte.setText(reporteFinanciero + "\n" + reporteGlobal);
+        sistema.exportarReporteContable();
+
+        String reporteFinanciero = sistema.generarReporteFinanciero();
+        txaReporte.setText("Reporte detallado generado en 'reporte_contable.csv'\n\n"
+                + reporteFinanciero + "\n\n"
+                + "Abriendo Excel...");
+
+        abrirArchivo("reporte_contable.csv");
     }//GEN-LAST:event_btnReporteActionPerformed
+
+    private void btnAbrirHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirHistorialActionPerformed
+        abrirArchivo("pagos.csv");
+    }//GEN-LAST:event_btnAbrirHistorialActionPerformed
+
+    private void abrirArchivo(String nombreArchivo) {
+        try {
+            File archivo = new File(nombreArchivo);
+            if (archivo.exists()) {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().open(archivo);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "No se puede abrir archivos automáticamente en este sistema.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "El archivo '" + nombreArchivo + "' aún no existe.\nRealice algún registro primero.", "Aviso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (IOException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al abrir el archivo: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -300,6 +341,7 @@ public class FrmContador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbrirHistorial;
     private javax.swing.JButton btnRegPago;
     private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnSalir;

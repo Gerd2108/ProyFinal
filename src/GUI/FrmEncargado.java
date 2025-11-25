@@ -9,6 +9,10 @@ import clases.Usuario;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.table.TableRowSorter;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -21,22 +25,40 @@ public class FrmEncargado extends javax.swing.JFrame {
      */
     private Usuario usuarioLogueado;
     private Sistema sistema;
+    private TableRowSorter<TableModel> sorter;
+    private DefaultTableModel modeloTabla;
 
     private void cargarInventarioEnTabla() {
-        String[] columnas = {"ID", "Nombre", "Categoría"};
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+
+        if (sorter != null) {
+            sorter.setRowFilter(null);
+        }
+
+        modelo.setRowCount(0);
 
         for (clases.Producto p : sistema.getInventario().getListaProductos()) {
             Object[] fila = {
                 p.getIdProducto(),
                 p.getNomProducto(),
                 p.getCatProducto(),
-                p.getPrecio(),
+                String.format("S/ %.2f", p.getPrecio()),
                 p.getStock()
             };
             modelo.addRow(fila);
         }
-        jTable1.setModel(modelo);
+
+        if (!txtBuscar.getText().trim().isEmpty()) {
+            try {
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + txtBuscar.getText().trim()));
+            } catch (Exception e) {
+            }
+        }
+
+        for (int i = 0; i < jTable1.getColumnCount(); i++) {
+            jTable1.getColumnModel().getColumn(i).setCellRenderer(new StockAlertRenderer());
+        }
     }
 
     public FrmEncargado(Usuario usuario, Sistema sistema) {
@@ -45,26 +67,48 @@ public class FrmEncargado extends javax.swing.JFrame {
         this.sistema = sistema;
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+
+        String[] columnas = {"ID", "Nombre", "Categoría", "Precio", "Stock"};
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        jTable1.setModel(modeloTabla);
+        sorter = new TableRowSorter<>(modeloTabla);
+        jTable1.setRowSorter(sorter);
+
         cargarInventarioEnTabla();
 
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
         }
-
         btnSalir.addActionListener(e -> {
             int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Seguro que deseas cerrar sesión?",
-                    "Confirmar cierre de sesión",
-                    javax.swing.JOptionPane.YES_NO_OPTION,
-                    javax.swing.JOptionPane.QUESTION_MESSAGE
+                    this, "¿Seguro que deseas cerrar sesión?", "Confirmar",
+                    javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE
             );
-
             if (opcion == javax.swing.JOptionPane.YES_OPTION) {
                 sistema.guardarDatos();
                 dispose();
                 FrmLogin login = new FrmLogin(this.sistema);
                 login.setVisible(true);
+            }
+        });
+
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (jTable1.rowAtPoint(evt.getPoint()) == -1) {
+                    jTable1.clearSelection();
+                }
+            }
+        });
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1.clearSelection();
             }
         });
     }
@@ -90,6 +134,9 @@ public class FrmEncargado extends javax.swing.JFrame {
         btnActPersonal = new javax.swing.JButton();
         btnInventario = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnMasStock = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtBuscar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -138,6 +185,22 @@ public class FrmEncargado extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/logohd.jpg"))); // NOI18N
 
+        btnMasStock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/actualizar.png"))); // NOI18N
+        btnMasStock.setText("AÑADIR STOCK");
+        btnMasStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMasStockActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Buscar Producto :");
+
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -152,42 +215,53 @@ public class FrmEncargado extends javax.swing.JFrame {
                                 .addGap(41, 41, 41)
                                 .addComponent(lblPNG)))
                         .addGap(93, 93, 93)
-                        .addComponent(jLabel1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnInventario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnActPersonal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnMasStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblBienvenida)
                         .addGap(18, 18, 18)
                         .addComponent(lblPNG))
-                    .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 19, Short.MAX_VALUE)
                         .addComponent(btnActPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnMasStock, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(799, 535));
+        setSize(new java.awt.Dimension(799, 611));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -196,14 +270,110 @@ public class FrmEncargado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnActPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActPersonalActionPerformed
-        FrmRegistrar frmPersonal = new FrmRegistrar(this.sistema);
-        frmPersonal.setVisible(true);
+        FrmRegistrar frmReg = new FrmRegistrar(this.sistema, null);
+
+        frmReg.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                actualizarListaUsuarios();
+            }
+        });
+
+        frmReg.setVisible(true);
     }//GEN-LAST:event_btnActPersonalActionPerformed
 
+    private void actualizarListaUsuarios() {
+        javax.swing.DefaultListModel<String> listModel = new javax.swing.DefaultListModel<>();
+        listModel.addElement("--- Lista de Personal Registrado ---");
+
+        if (sistema != null && sistema.getUsuarios() != null) {
+            for (clases.Usuario u : sistema.getUsuarios()) {
+                listModel.addElement(u.getDni() + " - " + u.getNombre() + " (" + u.getRol().getNombreRol() + ")");
+            }
+        }
+    }
+
+
     private void btnInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventarioActionPerformed
-        FrmProducto frmInventario = new FrmProducto(this.sistema);
-        frmInventario.setVisible(true);
+
+        int fila = jTable1.getSelectedRow();
+        jTable1.clearSelection();
+
+        clases.Producto productoAEditar = null;
+        if (fila != -1) {
+            try {
+                int id = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+                productoAEditar = sistema.getInventario().buscarProducto(id);
+            } catch (Exception e) {
+            }
+        }
+
+        FrmProducto frm = new FrmProducto(sistema, productoAEditar, null);
+
+        frm.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                cargarInventarioEnTabla();
+            }
+        });
+
+        frm.setVisible(true);
+
     }//GEN-LAST:event_btnInventarioActionPerformed
+
+    private void btnMasStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasStockActionPerformed
+
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un producto de la tabla.", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idProducto = (int) jTable1.getValueAt(fila, 0);
+        clases.Producto producto = sistema.getInventario().buscarProducto(idProducto);
+
+        if (producto != null) {
+
+            String input = javax.swing.JOptionPane.showInputDialog(this,
+                    "Stock actual: " + producto.getStock() + "\nIngrese cantidad a agregar:",
+                    "Reabastecer Stock",
+                    javax.swing.JOptionPane.QUESTION_MESSAGE);
+
+            if (input != null && !input.isEmpty()) {
+                try {
+                    int cantidad = Integer.parseInt(input);
+
+                    if (cantidad > 0) {
+
+                        producto.aumentarStock(cantidad);
+                        sistema.guardarDatos();
+
+                        cargarInventarioEnTabla();
+                        javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado. Nuevo total: " + producto.getStock());
+                    } else {
+                        javax.swing.JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0.");
+                    }
+                } catch (NumberFormatException e) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Ingrese un número válido.");
+                }
+            }
+        }
+    }//GEN-LAST:event_btnMasStockActionPerformed
+
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+        String textoBusqueda = txtBuscar.getText().trim();
+        if (textoBusqueda.length() == 0) {
+
+            sorter.setRowFilter(null);
+        } else {
+
+            try {
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + textoBusqueda));
+            } catch (Exception e) {
+
+            }
+        }
+    }//GEN-LAST:event_txtBuscarKeyReleased
 
     /**
      * @param args the command line arguments
@@ -248,14 +418,41 @@ public class FrmEncargado extends javax.swing.JFrame {
         return retValue;
     }
 
+    class StockAlertRenderer extends javax.swing.table.DefaultTableCellRenderer {
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            int stock = Integer.parseInt(table.getValueAt(row, 4).toString());
+
+            if (stock < 5) {
+                c.setBackground(new java.awt.Color(255, 204, 204));
+                c.setForeground(java.awt.Color.RED);
+            } else {
+                c.setBackground(java.awt.Color.WHITE);
+                c.setForeground(java.awt.Color.BLACK);
+            }
+            if (isSelected) {
+                c.setBackground(table.getSelectionBackground());
+                c.setForeground(table.getSelectionForeground());
+            }
+
+            return c;
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActPersonal;
     private javax.swing.JButton btnInventario;
+    private javax.swing.JButton btnMasStock;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblPNG;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

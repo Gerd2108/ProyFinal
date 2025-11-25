@@ -218,7 +218,7 @@ public class FrmAdmin extends javax.swing.JFrame {
     private void btnModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuarioActionPerformed
         int filaSeleccionada = jList1.getSelectedIndex();
 
-        // Validamos que se seleccione un usuario (y no el título "--- Lista ---")
+        
         if (filaSeleccionada <= 0) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario de la lista para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;

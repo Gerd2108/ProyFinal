@@ -4,27 +4,73 @@
  */
 package GUI;
 
-/**
- *
- * @author DIEGO
- */
+import clases.Producto;
+import clases.Sistema;
+import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
+
 public class FrmProducto extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmProducto
-     */
-    private clases.Sistema sistema;
+    private Sistema sistema;
+    private Producto productoAEditar;
+    private Runnable onUpdateListener;
 
     public FrmProducto() {
         initComponents();
     }
+    
+    
+    public FrmProducto(Producto producto ) {
+        initComponents();
+        this.productoAEditar = producto;
+    }
+    
 
-    public FrmProducto(clases.Sistema sistema) {
+    public FrmProducto(Sistema sistema, Runnable onUpdate) {
+        initComponents();
+        this.onUpdateListener = onUpdate;
+    }
+
+    public FrmProducto(Sistema sistema) {
+        this(sistema, null);
+    }
+
+    public FrmProducto(Sistema sistema, Producto producto, Runnable onUpdate) {
         initComponents();
         this.sistema = sistema;
+        this.productoAEditar = producto;
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        this.onUpdateListener = onUpdate;
 
         cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Estructuras", "Equipos", "Decoración", "Otros"}));
+
+        if (productoAEditar != null) {
+
+            this.setTitle("Modificar Producto");
+            btnRegistrar.setText("GUARDAR CAMBIOS");
+
+            btnEliminar.setEnabled(true);
+
+            txtID.setText(String.valueOf(producto.getIdProducto()));
+            txtID.setEnabled(false); // ID no editable
+            txtNombre.setText(producto.getNomProducto());
+            txtPrecio.setText(String.valueOf(producto.getPrecio()));
+            txtStock.setText(String.valueOf(producto.getStock()));
+            cbCategoria.setSelectedItem(producto.getCatProducto());
+
+        } else {
+
+            this.setTitle("Registrar Producto");
+            btnRegistrar.setText("REGISTRAR");
+
+            btnEliminar.setEnabled(false);
+
+            txtID.setText(String.valueOf(sistema.generarNuevoIdProducto()));
+        }
+    }
+
+    public void setOnSaveListener(Runnable listener) {
+        this.onUpdateListener = listener;
     }
 
     /**
@@ -50,6 +96,7 @@ public class FrmProducto extends javax.swing.JFrame {
         txtPrecio = new javax.swing.JTextField();
         txtStock = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        btnEliminar = new javax.swing.JButton();
 
         jLabel7.setText("Categoria:");
 
@@ -81,6 +128,14 @@ public class FrmProducto extends javax.swing.JFrame {
 
         jLabel8.setText("Stock:");
 
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
+        btnEliminar.setText("ELIMINAR");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,13 +144,10 @@ public class FrmProducto extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(106, 106, 106)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(106, 106, 106)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(106, 106, 106)
-                                .addComponent(jLabel5)))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
                         .addContainerGap(98, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -118,7 +170,9 @@ public class FrmProducto extends javax.swing.JFrame {
                         .addGap(39, 39, 39))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(241, 241, 241))
         );
         layout.setVerticalGroup(
@@ -148,7 +202,9 @@ public class FrmProducto extends javax.swing.JFrame {
                     .addComponent(cbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(jLabel5)
                 .addGap(11, 11, 11))
         );
@@ -165,7 +221,7 @@ public class FrmProducto extends javax.swing.JFrame {
             String stockStr = txtStock.getText().trim();
 
             if (idStr.isEmpty() || nombre.isEmpty() || precioStr.isEmpty() || stockStr.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -174,21 +230,74 @@ public class FrmProducto extends javax.swing.JFrame {
             int stock = Integer.parseInt(stockStr);
             String categoria = cbCategoria.getSelectedItem().toString();
 
-            clases.Producto nuevoProducto = new clases.Producto(id, nombre, categoria, precio, stock);
+            if (productoAEditar == null) {
+                if (sistema.getInventario().buscarProducto(id) != null) {
+                    JOptionPane.showMessageDialog(this, "El ID ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Producto nuevo = new Producto(id, nombre, categoria, precio, stock);
+                sistema.getInventario().agregarProducto(nuevo);
+                sistema.guardarDatos();
 
-            sistema.getInventario().agregarProducto(nuevoProducto);
-            sistema.guardarDatos();
-            javax.swing.JOptionPane.showMessageDialog(this, "Producto '" + nombre + "' registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Producto registrado.");
 
-            txtID.setText("");
-            txtNombre.setText("");
-            txtPrecio.setText("");
-            txtStock.setText("");
+                txtID.setText(String.valueOf(sistema.generarNuevoIdProducto()));
+                txtNombre.setText("");
+                txtPrecio.setText("");
+                txtStock.setText("");
+
+            } else {
+                productoAEditar.setNomProducto(nombre);
+                productoAEditar.setPrecio(precio);
+                productoAEditar.setStock(stock);
+                productoAEditar.setCatProducto(categoria);
+
+                sistema.guardarDatos();
+                if (onUpdateListener != null) {
+                    onUpdateListener.run();
+                }
+                JOptionPane.showMessageDialog(this, "Producto modificado.");
+                this.dispose();
+            }
 
         } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El ID, Precio y Stock deben ser números válidos.", "Error de Formato", javax.swing.JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Datos numéricos inválidos.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+
+        if (productoAEditar == null) {
+            return;
+        }
+
+        try {
+            if (!sistema.sePuedeEliminarProducto(productoAEditar.getIdProducto())) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No se puede eliminar: El producto está en un alquiler activo.");
+                return;
+            }
+
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar este producto?");
+
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                // A. Eliminar del sistema
+                sistema.getInventario().eliminarProducto(productoAEditar.getIdProducto());
+                sistema.guardarDatos();
+
+                // B. IMPORTANTE: Ejecutar el aviso de actualización
+                if (onUpdateListener != null) {
+                    onUpdateListener.run();
+                }
+
+                javax.swing.JOptionPane.showMessageDialog(this, "Producto eliminado.");
+                this.dispose();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,16 +313,24 @@ public class FrmProducto extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProducto.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProducto.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProducto.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmProducto.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -226,6 +343,7 @@ public class FrmProducto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> cbCategoria;
     private javax.swing.JLabel jLabel1;

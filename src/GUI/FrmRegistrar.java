@@ -125,6 +125,11 @@ public class FrmRegistrar extends javax.swing.JFrame {
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/cerrar.png"))); // NOI18N
         btnSalir.setText("SALIR");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("DNI:");
 
@@ -214,7 +219,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
 
         interfaces.Rol rol = getRolDesdeString(rolString, esInvitado);
         if (esInvitado) {
-            pass = "invitado123"; // Asigna clave por defecto a invitados
+            pass = "invitado123"; 
         }
 
         if (usuarioAEditar == null) {
@@ -234,8 +239,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
             usuarioAEditar.setClave(pass);
             usuarioAEditar.setRol(rol);
             usuarioAEditar.setApellido("Usuario");
-
-            // Llamamos al método modificar de Sistema
+            
             if (sistema.modificarUsuario(dni, usuarioAEditar)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " modificado exitosamente.", "Modificación Exitosa", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
@@ -245,6 +249,10 @@ public class FrmRegistrar extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
