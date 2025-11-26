@@ -117,6 +117,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
         setIconImage(getIconImage());
+        setResizable(false);
 
         lblBienvenida.setText("¡Hola, NOMBRE! (SECRETARIA)");
 
@@ -256,10 +257,10 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 .addComponent(btnReporteGlobal, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(743, 876));
+        setSize(new java.awt.Dimension(743, 926));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

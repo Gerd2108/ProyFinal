@@ -139,10 +139,10 @@ public class FrmRecibo extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel1)))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(848, 720));
+        setSize(new java.awt.Dimension(848, 744));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

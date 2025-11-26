@@ -124,6 +124,7 @@ public class FrmAlquiler extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Panel de Alquiler");
         setResizable(false);
 
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("CARRITO"));
