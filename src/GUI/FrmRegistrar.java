@@ -5,6 +5,7 @@
 package GUI;
 
 import java.awt.HeadlessException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -40,7 +41,9 @@ public class FrmRegistrar extends javax.swing.JFrame {
 
             txtDNI.setText(usuario.getDni());
             txtDNI.setEnabled(false);
+
             txtNombre.setText(usuario.getNombre());
+            txtApellido.setText(usuario.getApellido());
             txtContraseña.setText(usuario.getClave());
 
             cbRol.setSelectedItem(usuario.getRol().getNombreRol());
@@ -96,6 +99,8 @@ public class FrmRegistrar extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
         txtNombre = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        txtApellido = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -105,13 +110,13 @@ public class FrmRegistrar extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel2.setText("REGISTRAR USUARIO");
 
-        jLabel3.setText("Nombre:");
+        jLabel3.setText("Nombre :");
 
-        jLabel4.setText("Contraseña:");
+        jLabel4.setText("Contraseña :");
 
         chkInvitado.setText("¿Es Invitado?");
 
-        jLabel5.setText("Rol de Empresa:");
+        jLabel5.setText("Rol de Empresa :");
 
         cbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Contador", "Encargado", "Secretaria", "Trabajador" }));
 
@@ -131,7 +136,9 @@ public class FrmRegistrar extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("DNI:");
+        jLabel6.setText("DNI :");
+
+        jLabel7.setText("Apellido :");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,10 +157,12 @@ public class FrmRegistrar extends javax.swing.JFrame {
                                 .addGap(94, 94, 94))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel6))
+                            .addComponent(jLabel6)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbRol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -161,7 +170,8 @@ public class FrmRegistrar extends javax.swing.JFrame {
                             .addComponent(txtDNI)
                             .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNombre))))
+                            .addComponent(txtNombre)
+                            .addComponent(txtApellido))))
                 .addGap(210, 210, 210))
         );
         layout.setVerticalGroup(
@@ -175,15 +185,19 @@ public class FrmRegistrar extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(cbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -201,15 +215,15 @@ public class FrmRegistrar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-
         String dni = txtDNI.getText().trim();
         String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
         String pass = txtContraseña.getText().trim();
         String rolString = cbRol.getSelectedItem().toString();
         boolean esInvitado = chkInvitado.isSelected();
 
-        if (dni.isEmpty() || nombre.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El DNI y el Nombre son obligatorios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        if (dni.isEmpty() || nombre.isEmpty() || apellido.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El DNI,el Nombre y el Apellido son obligatorios.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (pass.isEmpty() && !esInvitado) {
@@ -219,13 +233,13 @@ public class FrmRegistrar extends javax.swing.JFrame {
 
         interfaces.Rol rol = getRolDesdeString(rolString, esInvitado);
         if (esInvitado) {
-            pass = "invitado123"; 
+            pass = "invitado123";
         }
 
         if (usuarioAEditar == null) {
 
             int nuevoId = sistema.getUsuarios().size() + 1;
-            clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, nombre, "Usuario", pass, rol); // Asumimos apellido "Usuario"
+            clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, nombre, apellido, pass, rol); 
 
             if (sistema.agregarUsuario(nuevoUsuario)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " (" + rol.getNombreRol() + ") registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
@@ -236,10 +250,11 @@ public class FrmRegistrar extends javax.swing.JFrame {
         } else {
 
             usuarioAEditar.setNombre(nombre);
+            usuarioAEditar.setApellido(apellido);
             usuarioAEditar.setClave(pass);
             usuarioAEditar.setRol(rol);
             usuarioAEditar.setApellido("Usuario");
-            
+
             if (sistema.modificarUsuario(dni, usuarioAEditar)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " modificado exitosamente.", "Modificación Exitosa", javax.swing.JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
@@ -247,6 +262,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Error al modificar el usuario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
+
 
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
@@ -260,6 +276,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
     private void limpiarCampos() {
         txtDNI.setText("");
         txtNombre.setText("");
+        txtApellido.setText("");
         txtContraseña.setText("");
     }
 
@@ -294,16 +311,24 @@ public class FrmRegistrar extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmRegistrar.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmRegistrar.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmRegistrar.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmRegistrar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmRegistrar.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -326,6 +351,8 @@ public class FrmRegistrar extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtNombre;

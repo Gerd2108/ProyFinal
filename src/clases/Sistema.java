@@ -373,7 +373,8 @@ public class Sistema {
         //Guardar Clientes
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("clientes.txt"))) {
             for (Cliente c : clientes) {
-                String linea = String.join(",", c.getDni(), c.getNombre(), c.getApellido());
+                String dir = (c.getDireccion() == null) ? "Sin Dirección" : c.getDireccion();
+                String linea = String.join(",", c.getDni(), c.getNombre(), c.getApellido(), dir);
                 bw.write(linea);
                 bw.newLine();
             }
@@ -384,7 +385,7 @@ public class Sistema {
         // Guardar Alquileres
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("alquileres.txt"))) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            
+
             for (Alquiler a : alquileres) {
                 String idsProductos = "";
                 for (Producto p : a.getProductos()) {
@@ -393,7 +394,7 @@ public class Sistema {
                 if (!idsProductos.isEmpty()) {
                     idsProductos = idsProductos.substring(0, idsProductos.length() - 1);
                 }
-                
+
                 String fechaStr = (a.getFecha() != null) ? sdf.format(a.getFecha()) : sdf.format(new java.util.Date());
 
                 String linea = String.join(",",
@@ -484,8 +485,13 @@ public class Sistema {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length == 3) {
-                    clientes.add(new Cliente(datos[0], datos[1], datos[2]));
+                if (datos.length >= 3) {
+                    String dni = datos[0];
+                    String nom = datos[1];
+                    String ape = datos[2];
+                    String dir = (datos.length >= 4) ? datos[3] : "Sin Dirección";
+
+                    clientes.add(new Cliente(dni, nom, ape, dir));
                 }
             }
         } catch (IOException e) {
@@ -496,22 +502,21 @@ public class Sistema {
         try (BufferedReader br = new BufferedReader(new FileReader("alquileres.txt"))) {
             String linea;
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            
+
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                if (datos.length >= 5) { 
+                if (datos.length >= 5) {
                     int id = Integer.parseInt(datos[0]);
                     Cliente cliente = buscarClientePorDNI(datos[1]);
                     double precioDia = Double.parseDouble(datos[2]);
                     int dias = Integer.parseInt(datos[3]);
                     String[] idsProductos = datos[4].split(";");
-                    
-                    
+
                     java.util.Date fecha = new java.util.Date();
-                    if(datos.length >= 6) {
+                    if (datos.length >= 6) {
                         try {
                             fecha = sdf.parse(datos[5]);
-                        } catch(Exception e) {                            
+                        } catch (Exception e) {
                         }
                     }
 
@@ -523,7 +528,7 @@ public class Sistema {
                         }
                     }
 
-                    if (cliente != null) {                        
+                    if (cliente != null) {
                         alquileres.add(new Alquiler(id, cliente, productosAlquilados, precioDia, dias, fecha));
                     }
                 }

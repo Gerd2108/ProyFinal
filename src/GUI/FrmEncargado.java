@@ -37,6 +37,7 @@ public class FrmEncargado extends javax.swing.JFrame {
     private Sistema sistema;
     private TableRowSorter<TableModel> sorter;
     private DefaultTableModel modeloTabla;
+    public boolean cerrandoSesion = false;
 
     private void cargarInventarioEnTabla() {
 
@@ -91,21 +92,7 @@ public class FrmEncargado extends javax.swing.JFrame {
 
         cargarInventarioEnTabla();
 
-        for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
-            btnSalir.removeActionListener(al);
-        }
-        btnSalir.addActionListener(e -> {
-            int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                    this, "¿Seguro que deseas cerrar sesión?", "Confirmar",
-                    javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE
-            );
-            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
-                sistema.guardarDatos();
-                dispose();
-                FrmLogin login = new FrmLogin(this.sistema);
-                login.setVisible(true);
-            }
-        });
+        
 
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -301,7 +288,25 @@ public class FrmEncargado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        // TODO add your handling code here:
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Seguro que deseas cerrar sesión?",
+                "Confirmar cierre de sesión",
+                javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+            // AVISAMOS QUE ES UN CIERRE DE SESIÓN, NO UN REGRESO
+            this.cerrandoSesion = true;
+
+            sistema.guardarDatos();
+            dispose(); // Esto disparará el evento de cierre
+
+            FrmLogin login = new FrmLogin(this.sistema);
+            login.setVisible(true);
+        }
+
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnActPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActPersonalActionPerformed
@@ -461,7 +466,7 @@ public class FrmEncargado extends javax.swing.JFrame {
             historial.append("Este producto no registra salidas ni alquileres hasta el momento.");
         }
 
-    javax.swing.JTextArea area = new javax.swing.JTextArea(historial.toString());
+        javax.swing.JTextArea area = new javax.swing.JTextArea(historial.toString());
         area.setEditable(false);
         area.setRows(10);
         area.setColumns(40);

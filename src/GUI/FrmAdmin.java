@@ -211,14 +211,31 @@ public class FrmAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        FrmProducto frmProd = new FrmProducto(this.sistema);
-        frmProd.setVisible(true);
+        FrmEncargado frmInventario = new FrmEncargado(this.usuarioLogueado, this.sistema);
+
+        frmInventario.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        frmInventario.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+
+                if (frmInventario.cerrandoSesion) {
+
+                    dispose();
+                } else {
+
+                    setVisible(true);
+                }
+            }
+        });
+
+        this.setVisible(false); // Ocultamos Admin
+        frmInventario.setVisible(true); // Mostramos Inventario
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuarioActionPerformed
         int filaSeleccionada = jList1.getSelectedIndex();
 
-        
         if (filaSeleccionada <= 0) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario de la lista para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;

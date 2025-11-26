@@ -508,14 +508,21 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 16);
                 content.beginText();
                 content.newLineAtOffset(50, 750);
-                content.showText("REPORTE GENERAL DE ALQUILERES - DAL ESTRUCTURAS");
+                content.showText("REPORTE HISTÓRICO DE ALQUILERES");
+                content.endText();
+
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
+                content.beginText();
+                content.newLineAtOffset(50, 735);
+                content.showText("Generado al: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
                 content.endText();
 
                 int y = 700;
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD), 10);
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD), 9);
                 content.beginText();
                 content.newLineAtOffset(50, y);
-                content.showText(String.format("%-5s %-30s %-15s %-10s", "ID", "CLIENTE", "ESTADO", "MONTO"));
+
+                content.showText(String.format("%-5s %-12s %-35s %-12s", "ID", "FECHA", "CLIENTE", "TOTAL"));
                 content.endText();
 
                 y -= 10;
@@ -525,16 +532,28 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 y -= 15;
 
                 double totalGeneral = 0;
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
+                SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 9);
 
                 for (clases.Alquiler a : sistema.getAlquileres()) {
+                    if (y < 50) {
+                        break;
+                    }
                     double monto = a.calcularTotal();
                     totalGeneral += monto;
 
-                    String linea = String.format("%-5d %-30s %-15s S/%8.2f",
+                    String fechaStr = (a.getFecha() != null) ? sdfFecha.format(a.getFecha()) : "--/--/----";
+
+                    String nombreCliente = a.getCliente().getNombre() + " " + a.getCliente().getApellido();
+                    if (nombreCliente.length() > 33) {
+                        nombreCliente = nombreCliente.substring(0, 30) + "...";
+                    }
+
+                    String linea = String.format("%-5d %-12s %-35s S/%9.2f",
                             a.getIdAlquiler(),
-                            recortar(a.getCliente().getNombre(), 30),
-                            "REGISTRADO",
+                            fechaStr,
+                            nombreCliente,
                             monto);
 
                     content.beginText();
@@ -542,16 +561,17 @@ public class FrmSecretaria extends javax.swing.JFrame {
                     content.showText(linea);
                     content.endText();
                     y -= 15;
-
-                    if (y < 50) {
-                    }
                 }
 
                 y -= 20;
+                content.moveTo(50, y + 10);
+                content.lineTo(550, y + 10);
+                content.stroke();
+
                 content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 12);
                 content.beginText();
-                content.newLineAtOffset(350, y);
-                content.showText("TOTAL INGRESOS: S/ " + String.format("%.2f", totalGeneral));
+                content.newLineAtOffset(300, y);
+                content.showText("TOTAL HISTÓRICO: S/ " + String.format("%.2f", totalGeneral));
                 content.endText();
             }
             doc.save(archivo);

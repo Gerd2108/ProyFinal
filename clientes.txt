@@ -1,1 +1,3 @@
-99999999,Cliente,General
+99999999,Cliente,General,Sin Dirección
+12345678,Juan,,Jirón Lima 834
+12345678911,Lus,,Jirón Mirones
