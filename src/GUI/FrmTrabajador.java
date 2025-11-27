@@ -6,9 +6,13 @@ package GUI;
 
 import clases.Sistema;
 import clases.Usuario;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -26,9 +30,10 @@ public class FrmTrabajador extends javax.swing.JFrame {
         initComponents();
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
-        cargarRegistrosAsistencia();
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
+
+        cargarHistorialAsistencia();
 
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
@@ -56,6 +61,33 @@ public class FrmTrabajador extends javax.swing.JFrame {
         initComponents();
     }
 
+    private void cargarHistorialAsistencia() {
+        DefaultTableModel modelo = new DefaultTableModel(new String[]{"Tipo", "Fecha y Hora"}, 0);
+
+        for (String registro : usuarioLogueado.getAsistencia()) {
+            String[] partes = registro.split(" - ");
+            if (partes.length >= 2) {
+                modelo.addRow(new Object[]{partes[0], partes[1]});
+            }
+        }
+        tblAsistencia.setModel(modelo);
+    }
+
+    private String obtenerUltimoEstado() {
+        List<String> historial = usuarioLogueado.getAsistencia();
+        if (historial.isEmpty()) {
+            return "NINGUNO";
+        }
+        String ultimo = historial.get(historial.size() - 1);
+        if (ultimo.startsWith("ENTRADA")) {
+            return "ENTRADA";
+        }
+        if (ultimo.startsWith("SALIDA")) {
+            return "SALIDA";
+        }
+        return "DESCONOCIDO";
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,12 +100,13 @@ public class FrmTrabajador extends javax.swing.JFrame {
         lblBienvenida = new javax.swing.JLabel();
         lblPNG = new javax.swing.JLabel();
         btnRegistrarEntrada = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         btnSalir = new javax.swing.JButton();
         btnRecibo = new javax.swing.JButton();
         btnRegistrarSalida = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblAsistencia = new javax.swing.JTable();
+        btnHonorario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -91,10 +124,6 @@ public class FrmTrabajador extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/cerrarsesion.png"))); // NOI18N
         btnSalir.setText("CERRAR SESION");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -104,7 +133,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         });
 
         btnRecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/descargar.png"))); // NOI18N
-        btnRecibo.setText("DESCARGAR RECIBO");
+        btnRecibo.setText("REPORTE ASISTENCIA");
         btnRecibo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReciboActionPerformed(evt);
@@ -120,6 +149,27 @@ public class FrmTrabajador extends javax.swing.JFrame {
         });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/logohd.jpg"))); // NOI18N
+
+        tblAsistencia.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tblAsistencia);
+
+        btnHonorario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/descargar.png"))); // NOI18N
+        btnHonorario.setText("RECIBO POR HONORARIOS");
+        btnHonorario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHonorarioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,94 +187,120 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(22, 22, 22))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                    .addComponent(btnRecibo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnHonorario, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblBienvenida)
-                .addGap(18, 18, 18)
-                .addComponent(lblPNG)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblBienvenida)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPNG))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel1)))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addComponent(btnHonorario, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
+                .addGap(15, 15, 15))
         );
 
-        setSize(new java.awt.Dimension(792, 662));
+        setSize(new java.awt.Dimension(792, 741));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarEntradaActionPerformed
-        if (usuarioLogueado != null && sistema != null) {
-            sistema.registrarAsistencia(usuarioLogueado, "Entrada");
-            JOptionPane.showMessageDialog(this, "Entrada registrada exitosamente.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Error: No se pudo registrar la entrada.", "Error", JOptionPane.ERROR_MESSAGE);
+        String estado = obtenerUltimoEstado();
+
+        if (estado.equals("ENTRADA")) {
+            JOptionPane.showMessageDialog(this,
+                    "Ya tienes una entrada registrada.\nDebes marcar SALIDA antes de entrar nuevamente.",
+                    "Acción Bloqueada", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        cargarRegistrosAsistencia();
+        if (JOptionPane.showConfirmDialog(this, "¿Marcar ENTRADA ahora?", "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            sistema.registrarAsistencia(usuarioLogueado, "ENTRADA");
+            sistema.guardarDatos();
+
+            cargarHistorialAsistencia();
+
+            JOptionPane.showMessageDialog(this, "Entrada registrada con éxito.");
+        }
 
     }//GEN-LAST:event_btnRegistrarEntradaActionPerformed
 
     private void btnReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReciboActionPerformed
-        if (usuarioLogueado != null && sistema != null) {
-            String reciboTexto = sistema.generarReciboPorHonorarios(usuarioLogueado);
-            JOptionPane.showMessageDialog(this, reciboTexto, "Recibo por Honorarios", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error: No se pudo generar el recibo.", "Error", JOptionPane.ERROR_MESSAGE);
+        try {
+            String nombreArchivo = "Constancia_Trabajo_" + usuarioLogueado.getDni() + ".pdf";
+            sistema.generarPDFAsistenciaPersonal(usuarioLogueado, nombreArchivo);
+
+            JOptionPane.showMessageDialog(this, "Comprobante generado exitosamente.");
+
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(new File(nombreArchivo));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage());
         }
     }//GEN-LAST:event_btnReciboActionPerformed
 
     private void btnRegistrarSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarSalidaActionPerformed
-        if (usuarioLogueado != null && sistema != null) {
-            sistema.registrarAsistencia(usuarioLogueado, "Salida");
-            JOptionPane.showMessageDialog(this, "Salida registrada exitosamente.");
+        String estado = obtenerUltimoEstado();
 
-        } else {
-            JOptionPane.showMessageDialog(this, "Error: No se pudo registrar la salida.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (!estado.equals("ENTRADA")) {
+            JOptionPane.showMessageDialog(this,
+                    "No tienes una entrada activa.\nDebes marcar ENTRADA primero.",
+                    "Acción Bloqueada", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-        cargarRegistrosAsistencia();
+
+        if (JOptionPane.showConfirmDialog(this, "¿Marcar SALIDA ahora?", "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            sistema.registrarAsistencia(usuarioLogueado, "SALIDA");
+            sistema.guardarDatos();
+
+            cargarHistorialAsistencia();
+
+            JOptionPane.showMessageDialog(this, "Salida registrada. ¡Buen descanso!");
+        }
     }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
 
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void cargarRegistrosAsistencia() {
-        if (usuarioLogueado != null && sistema != null) {
-            java.util.List<String> registros = sistema.obtenerRegistrosAsistencia(usuarioLogueado);
-            StringBuilder sb = new StringBuilder("--- Registros de Asistencia ---\n");
-            if (registros.isEmpty()) {
-                sb.append("Aún no hay registros.\n");
-            } else {
-                for (String registro : registros) {
-                    sb.append(registro).append("\n");
-                }
+    private void btnHonorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHonorarioActionPerformed
+        try {
+            String nombreArchivo = "Recibo_Honorarios_" + usuarioLogueado.getDni() + ".pdf";
+            sistema.generarPDFReciboHonorarios(usuarioLogueado, nombreArchivo);
+            JOptionPane.showMessageDialog(this, "Recibo por Honorarios generado.");
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(new File(nombreArchivo));
             }
-            jTextArea1.setText(sb.toString());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error PDF: " + e.getMessage());
         }
-    }
+    }//GEN-LAST:event_btnHonorarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,14 +354,15 @@ public class FrmTrabajador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHonorario;
     private javax.swing.JButton btnRecibo;
     private javax.swing.JButton btnRegistrarEntrada;
     private javax.swing.JButton btnRegistrarSalida;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblPNG;
+    private javax.swing.JTable tblAsistencia;
     // End of variables declaration//GEN-END:variables
 }

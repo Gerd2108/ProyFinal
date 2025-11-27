@@ -207,14 +207,202 @@ public class Sistema {
         System.out.println("Registrando " + tipo + " para: " + usuario.getNombre());
     }
 
+    public void generarPDFAsistenciaPersonal(Usuario u, String rutaArchivo) throws IOException {
+        try (org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument()) {
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            doc.addPage(page);
+
+            try (org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page)) {
+                int y = 750;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 16);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("CONSTANCIA DE ASISTENCIA LABORAL");
+                content.endText();
+                y -= 25;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 12);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Empresa: DAL ESTRUCTURAS S.A.C");
+                content.endText();
+                y -= 40;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("DATOS DEL COLABORADOR:");
+                content.endText();
+                y -= 20;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 11);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Nombre: " + u.getNombre() + " " + u.getApellido());
+                content.endText();
+                y -= 15;
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("DNI: " + u.getDni());
+                content.endText();
+                y -= 15;
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Cargo: " + u.getRol().getNombreRol());
+                content.endText();
+                y -= 40;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("REGISTRO DE MARCAS:");
+                content.endText();
+                y -= 20;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 10);
+
+                int contadorMarcas = 0;
+                for (String registro : u.getAsistencia()) {
+                    if (y < 100) {
+                        break;
+                    }
+
+                    content.beginText();
+                    content.newLineAtOffset(50, y);
+                    content.showText("• " + registro);
+                    content.endText();
+                    y -= 15;
+                    contadorMarcas++;
+                }
+
+                y -= 30;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_OBLIQUE), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Total de registros procesados: " + contadorMarcas);
+                content.endText();
+
+                content.beginText();
+                content.newLineAtOffset(50, 50);
+                content.showText("Certificado generado automáticamente por el Sistema de Gestión.");
+                content.endText();
+            }
+            doc.save(rutaArchivo);
+        }
+    }
+
     public List<String> obtenerRegistrosAsistencia(Usuario usuario) {
         return usuario.getAsistencia();
     }
 
-    public String generarReciboPorHonorarios(Usuario trabajador) {
-        double monto = 1200 + (Math.random() * 300);
-        String montoFormateado = String.format("%.2f", monto);
-        return "Recibo de Honorarios para " + trabajador.getNombre() + " - Monto: S/ " + montoFormateado;
+    public void generarPDFReciboHonorarios(Usuario u, String rutaArchivo) throws IOException {
+        try (org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument()) {
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            doc.addPage(page);
+
+            try (org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page)) {
+                int y = 750;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 14);
+                content.beginText();
+                content.newLineAtOffset(200, y);
+                content.showText("RECIBO POR HONORARIOS ELECTRÓNICO");
+                content.endText();
+                y -= 20;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 10);
+                content.beginText();
+                content.newLineAtOffset(250, y);
+                content.showText("Nro: E001-" + (1000 + u.getIdUsuario()));
+                content.endText();
+                y -= 40;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 11);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("DE: " + u.getNombre().toUpperCase() + " " + u.getApellido().toUpperCase());
+                content.endText();
+                y -= 15;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("DNI: " + u.getDni());
+                content.endText();
+                y -= 15;
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Domicilio: Lima, Perú");
+                content.endText();
+                y -= 30;
+
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 11);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("PARA: DAL ESTRUCTURAS S.A.C.");
+                content.endText();
+                y -= 15;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("RUC: 20550267005");
+                content.endText();
+                y -= 40;
+                int asistencias = u.getAsistencia().size();
+                double montoBruto = (asistencias > 0) ? asistencias * 50.00 : 1025.00;
+                if (montoBruto > 5000) {
+                    montoBruto = 5000;
+                }
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("CONCEPTO:");
+                content.endText();
+                y -= 15;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Por servicios prestados como " + u.getRol().getNombreRol() + " correspondientes al mes en curso.");
+                content.endText();
+                y -= 15;
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Fecha de Emisión: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date()));
+                content.endText();
+                y -= 40;
+
+                double retencion = montoBruto * 0.08;
+                double totalNeto = montoBruto - retencion;
+
+                content.moveTo(50, y + 10);
+                content.lineTo(300, y + 10);
+                content.stroke();
+
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(String.format("Total Honorarios:      S/ %8.2f", montoBruto));
+                content.endText();
+                y -= 20;
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(String.format("Retención (8%%):       S/ %8.2f", retencion));
+                content.endText();
+                y -= 20;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 11);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(String.format("TOTAL NETO RECIBIDO:   S/ %8.2f", totalNeto));
+                content.endText();
+
+                y -= 50;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_OBLIQUE), 8);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Este documento es una representación impresa de un documento electrónico generado por el sistema.");
+                content.endText();
+            }
+            doc.save(rutaArchivo);
+        }
     }
 
     public void registrarPagoPersonal(Usuario contador, Usuario empleado, double monto) {
