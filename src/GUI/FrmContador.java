@@ -266,34 +266,34 @@ public class FrmContador extends javax.swing.JFrame {
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
 
-        sistema.exportarReporteContable();
+        try {
+            sistema.generarPDFContable();
+            txaReporte.setText("Reporte Contable generado exitosamente.");
+            abrirPDF("Reporte_Contable.pdf");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage());
+        }
 
-        String reporteFinanciero = sistema.generarReporteFinanciero();
-        txaReporte.setText("Reporte detallado generado en 'reporte_contable.csv'\n\n"
-                + reporteFinanciero + "\n\n"
-                + "Abriendo Excel...");
-
-        abrirArchivo("reporte_contable.csv");
     }//GEN-LAST:event_btnReporteActionPerformed
 
     private void btnAbrirHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirHistorialActionPerformed
-        abrirArchivo("pagos.csv");
+        try {
+            sistema.generarPDFHistorialPagos();
+            txaReporte.setText("Historial de Pagos generado exitosamente.");
+            abrirPDF("Historial_Pagos.pdf");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnAbrirHistorialActionPerformed
 
-    private void abrirArchivo(String nombreArchivo) {
+    private void abrirPDF(String nombre) {
         try {
-            File archivo = new File(nombreArchivo);
-            if (archivo.exists()) {
-                if (Desktop.isDesktopSupported()) {
-                    Desktop.getDesktop().open(archivo);
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(this, "No se puede abrir archivos automáticamente en este sistema.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "El archivo '" + nombreArchivo + "' aún no existe.\nRealice algún registro primero.", "Aviso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            File archivo = new File(nombre);
+            if (archivo.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
             }
         } catch (IOException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al abrir el archivo: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 
@@ -311,16 +311,24 @@ public class FrmContador extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmContador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmContador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmContador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmContador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmContador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmContador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmContador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmContador.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

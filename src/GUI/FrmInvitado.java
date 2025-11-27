@@ -9,6 +9,9 @@ import clases.Usuario;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,19 +25,33 @@ public class FrmInvitado extends javax.swing.JFrame {
     private Usuario usuarioLogueado;
     private Sistema sistema;
 
-    private void cargarPersonalEnTabla() {
-        String[] columnas = {"Nombre", "Apellido", "Rol"};
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(columnas, 0);
-
-        for (clases.Usuario u : sistema.getUsuarios()) {
-            Object[] fila = {
-                u.getNombre(),
-                u.getApellido(),
-                u.getRol().getNombreRol()
-            };
-            modelo.addRow(fila);
-        }
-        jTable1.setModel(modelo);
+    private void cargarInfoEmpresa() {
+        txaInfoEmpresa.setEditable(false);
+        txaInfoEmpresa.setText("""
+            ============================================================
+                            GUÍA DE PERSONAL DE APOYO (TEMPORAL)
+            ============================================================
+            
+            UBICACIÓN Y HORARIO:
+               - Base Operativa: Villa El Salvador, Mz G Lote 16
+               - Horario de Turno: 8:00 AM - 5:00 PM (Revisar con Supervisor)
+            
+            CANALES DE COMUNICACIÓN:
+               - Encargado de Almacén:  951 638 873 (Coordinación diaria)
+               - Administración:        (01) 555-1234
+               - Emergencias:           Reportar inmediato a Caseta de Seguridad
+            
+            TUS RESPONSABILIDADES PRINCIPALES:
+               1. Apoyo en la carga y descarga de estructuras metálicas.
+               2. Limpieza y conteo de sillas/mesas devueltas de alquiler.
+               3. Uso OBLIGATORIO de casco y botas (EPP) en zona de carga.
+               4. Reportar material dañado al Encargado de turno.
+            
+            IMPORTANTE: 
+               Recuerda marcar tu asistencia en la entrada y salida para el
+               pago de tus horas.
+            """);
+        txaInfoEmpresa.setCaretPosition(0);
     }
 
     public FrmInvitado(Usuario usuario, Sistema sistema) {
@@ -42,8 +59,9 @@ public class FrmInvitado extends javax.swing.JFrame {
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
 
-        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
-        cargarPersonalEnTabla();
+        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (PERSONAL TEMPORAL)");
+
+        cargarInfoEmpresa();
 
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
@@ -83,9 +101,11 @@ public class FrmInvitado extends javax.swing.JFrame {
         lblBienvenida = new javax.swing.JLabel();
         lblPng = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txaInfoEmpresa = new javax.swing.JTextArea();
+        btnEntrada = new javax.swing.JButton();
+        btnSalida = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control");
@@ -104,32 +124,36 @@ public class FrmInvitado extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane1.setToolTipText("");
-        jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Nombre/Cargo"));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/logohd.jpg"))); // NOI18N
+
+        txaInfoEmpresa.setColumns(20);
+        txaInfoEmpresa.setRows(5);
+        jScrollPane2.setViewportView(txaInfoEmpresa);
+
+        btnEntrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/cerrarsesion.png"))); // NOI18N
+        btnEntrada.setText("REGISTRAR ENTRADA");
+        btnEntrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntradaActionPerformed(evt);
+            }
+        });
+
+        btnSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/cerrarsesion.png"))); // NOI18N
+        btnSalida.setText("REGISTRAR SALIDA");
+        btnSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalidaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(lblBienvenida)
@@ -138,11 +162,14 @@ public class FrmInvitado extends javax.swing.JFrame {
                                 .addComponent(lblPng)
                                 .addGap(100, 100, 100)))
                         .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(8, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,23 +181,47 @@ public class FrmInvitado extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblPng))
                     .addComponent(jLabel1))
-                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 87, Short.MAX_VALUE)
-                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(139, 139, 139)))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(btnEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(743, 535));
+        setSize(new java.awt.Dimension(743, 658));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntradaActionPerformed
+        if (JOptionPane.showConfirmDialog(this, "¿Registrar ingreso ahora?", "Confirmar Entrada", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            sistema.registrarAsistencia(usuarioLogueado, "ENTRADA");
+            sistema.guardarDatos();
+
+            String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            JOptionPane.showMessageDialog(this, "ENTRADA REGISTRADA A LAS " + hora);
+        }
+    }//GEN-LAST:event_btnEntradaActionPerformed
+
+    private void btnSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalidaActionPerformed
+        if (JOptionPane.showConfirmDialog(this, "¿Registrar salida ahora?", "Confirmar Salida", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            sistema.registrarAsistencia(usuarioLogueado, "SALIDA");
+            sistema.guardarDatos();
+
+            String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            JOptionPane.showMessageDialog(this, "SALIDA REGISTRADA A LAS " + hora + "\n¡Buen descanso!");
+        }
+    }//GEN-LAST:event_btnSalidaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -216,11 +267,14 @@ public class FrmInvitado extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEntrada;
+    private javax.swing.JButton btnSalida;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblPng;
+    private javax.swing.JTextArea txaInfoEmpresa;
     // End of variables declaration//GEN-END:variables
+
 }

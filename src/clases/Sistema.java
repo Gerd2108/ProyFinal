@@ -268,67 +268,247 @@ public class Sistema {
         return total;
     }
 
-    public void exportarReporteContable() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("reporte_contable.csv"))) {
-            // Ingresos 
-            bw.write("--- REPORTE DE INGRESOS (ALQUILERES) ---");
-            bw.newLine();
-            bw.write("ID_ALQUILER;CLIENTE;DNI_RUC;ITEMS;DIAS;SUBTOTAL;IGV;TOTAL");
-            bw.newLine();
+    public void generarPDFContable() throws IOException {
+        try (org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument()) {
 
-            double sumaIngresos = 0;
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            doc.addPage(page);
+            org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+
+            int y = 750;
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 18);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText("REPORTE CONTABLE INTEGRAL - DAL ESTRUCTURAS");
+            content.endText();
+            y -= 20;
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 10);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText("Fecha de Emisión: " + new java.util.Date().toString());
+            content.endText();
+            y -= 40;
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText("1. DETALLE DE INGRESOS (ALQUILERES)");
+            content.endText();
+            y -= 20;
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER_BOLD), 8);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText(String.format("%-4s %-20s %-10s %-3s %-3s %-9s %-9s %-9s",
+                    "ID", "CLIENTE", "DNI/RUC", "ITM", "DIA", "SUBTOT.", "IGV", "TOTAL"));
+            content.endText();
+
+            y -= 5;
+            content.moveTo(50, y);
+            content.lineTo(550, y);
+            content.stroke();
+            y -= 15;
+
+            double totalIngresos = 0;
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 8);
+
             for (Alquiler a : alquileres) {
+
+                if (y < 50) {
+                    content.close();
+                    page = new org.apache.pdfbox.pdmodel.PDPage();
+                    doc.addPage(page);
+                    content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                    y = 750;
+                    content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 8); // Reset fuente
+                }
+
                 double total = a.calcularTotal();
-                double subtotal = total / 1.18;
-                double igv = total - subtotal;
-                sumaIngresos += total;
+                double subtotal = a.getSubtotal();
+                double igv = a.getIGV();
+                totalIngresos += total;
 
-                String linea = String.join(";",
-                        String.valueOf(a.getIdAlquiler()),
-                        a.getCliente().getNombre() + " " + a.getCliente().getApellido(),
+                String cliente = a.getCliente().getNombre() + " " + a.getCliente().getApellido();
+                if (cliente.length() > 18) {
+                    cliente = cliente.substring(0, 18);
+                }
+                String linea = String.format("%-4d %-20s %-10s %-3d %-3d %9.2f %9.2f %9.2f",
+                        a.getIdAlquiler(),
+                        cliente,
                         a.getCliente().getDni(),
-                        String.valueOf(a.getProductos().size()),
-                        String.valueOf(a.getDias()),
-                        String.format("%.2f", subtotal).replace(",", "."),
-                        String.format("%.2f", igv).replace(",", "."),
-                        String.format("%.2f", total).replace(",", ".")
-                );
-                bw.write(linea);
-                bw.newLine();
-            }
-            bw.write(";;;;;;TOTAL INGRESOS:;" + String.format("%.2f", sumaIngresos).replace(",", "."));
-            bw.newLine();
-            bw.newLine();
+                        a.getProductos().size(),
+                        a.getDias(),
+                        subtotal, igv, total);
 
-            //Inventario
-            bw.write("--- VALORIZACIÓN DE INVENTARIO (ACTIVOS) ---");
-            bw.newLine();
-            bw.write("ID;PRODUCTO;CATEGORÍA;COSTO_UNIT;STOCK_ACTUAL;VALOR_TOTAL");
-            bw.newLine();
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(linea);
+                content.endText();
+                y -= 12;
+            }
+
+            y -= 5;
+            content.moveTo(50, y);
+            content.lineTo(550, y);
+            content.stroke();
+            y -= 15;
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 10);
+            content.beginText();
+            content.newLineAtOffset(350, y);
+            content.showText(String.format("TOTAL INGRESOS: S/ %.2f", totalIngresos));
+            content.endText();
+
+            y -= 40;
+
+            if (y < 100) {
+                content.close();
+                page = new org.apache.pdfbox.pdmodel.PDPage();
+                doc.addPage(page);
+                content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                y = 750;
+            }
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText("2. VALORIZACIÓN DE INVENTARIO (ACTIVOS)");
+            content.endText();
+            y -= 20;
+
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER_BOLD), 8);
+            content.beginText();
+            content.newLineAtOffset(50, y);
+            content.showText(String.format("%-4s %-25s %-15s %-10s %-6s %-12s",
+                    "ID", "PRODUCTO", "CATEGORÍA", "COSTO U.", "STOCK", "VALOR TOTAL"));
+            content.endText();
+            y -= 5;
+            content.moveTo(50, y);
+            content.lineTo(550, y);
+            content.stroke();
+            y -= 15;
 
             double valorTotalInventario = 0;
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 8);
+
             for (Producto p : inventario.getListaProductos()) {
+                if (y < 50) {
+                    content.close();
+                    page = new org.apache.pdfbox.pdmodel.PDPage();
+                    doc.addPage(page);
+                    content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                    y = 750;
+                    content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 8);
+                }
+
                 double valorItem = p.getPrecio() * p.getStock();
                 valorTotalInventario += valorItem;
 
-                String linea = String.join(";",
-                        String.valueOf(p.getIdProducto()),
-                        p.getNomProducto(),
-                        p.getCatProducto(),
-                        String.format("%.2f", p.getPrecio()).replace(",", "."),
-                        String.valueOf(p.getStock()),
-                        String.format("%.2f", valorItem).replace(",", ".")
-                );
-                bw.write(linea);
-                bw.newLine();
+                String nombre = p.getNomProducto();
+                if (nombre.length() > 23) {
+                    nombre = nombre.substring(0, 23);
+                }
+
+                String linea = String.format("%-4d %-25s %-15s %8.2f %-6d %10.2f",
+                        p.getIdProducto(), nombre, p.getCatProducto(), p.getPrecio(), p.getStock(), valorItem);
+
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(linea);
+                content.endText();
+                y -= 12;
             }
-            bw.write(";;;;;TOTAL ACTIVOS:;" + String.format("%.2f", valorTotalInventario).replace(",", "."));
-            bw.newLine();
 
-            System.out.println("Reporte contable generado.");
+            y -= 5;
+            content.moveTo(50, y);
+            content.lineTo(550, y);
+            content.stroke();
+            y -= 15;
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 10);
+            content.beginText();
+            content.newLineAtOffset(300, y);
+            content.showText(String.format("TOTAL ACTIVOS: S/ %.2f", valorTotalInventario));
+            content.endText();
+            y -= 30;
+            if (y < 50) {
+                content.close();
+                page = new org.apache.pdfbox.pdmodel.PDPage();
+                doc.addPage(page);
+                content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                y = 750;
+            }
+            content.setNonStrokingColor(1, 1, 1);
+            content.addRect(50, y - 15, 500, 25);
+            content.fill();
+            content.setNonStrokingColor(0, 0, 0);
 
-        } catch (IOException e) {
-            System.err.println("Error al generar reporte: " + e.getMessage());
+            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+            content.beginText();
+            content.newLineAtOffset(60, y - 8);
+            content.showText("PATRIMONIO BRUTO TOTAL:  S/ " + String.format("%,.2f", (valorTotalInventario + totalIngresos)));
+            content.endText();
+
+            content.close();
+            doc.save("Reporte_Contable.pdf");
+        }
+    }
+
+    public void generarPDFHistorialPagos() throws IOException {
+        try (org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument()) {
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            doc.addPage(page);
+
+            try (org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page)) {
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 18);
+                content.beginText();
+                content.newLineAtOffset(50, 750);
+                content.showText("HISTORIAL DE PAGOS AL PERSONAL");
+                content.endText();
+
+                int y = 700;
+                content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER_BOLD), 10);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText(String.format("%-12s %-10s %-25s %-10s", "FECHA", "HORA", "EMPLEADO", "MONTO"));
+                content.endText();
+
+                y -= 15;
+                content.moveTo(50, y + 10);
+                content.lineTo(550, y + 10);
+                content.stroke();
+
+                java.io.File archivoPagos = new java.io.File("pagos.csv");
+                if (archivoPagos.exists()) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(archivoPagos))) {
+                        String linea;
+                        br.readLine();
+                        content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 10);
+
+                        while ((linea = br.readLine()) != null) {
+                            if (y < 50) {
+                                break;
+                            }
+                            String[] d = linea.split(";");
+                            if (d.length >= 6) {
+                                String texto = String.format("%-12s %-10s %-25s S/%-8s", d[0], d[1], d[3], d[5]);
+                                content.beginText();
+                                content.newLineAtOffset(50, y);
+                                content.showText(texto);
+                                content.endText();
+                                y -= 15;
+                            }
+                        }
+                    }
+                } else {
+                    content.beginText();
+                    content.newLineAtOffset(50, y);
+                    content.showText("No hay historial de pagos registrado.");
+                    content.endText();
+                }
+            }
+            doc.save("Historial_Pagos.pdf");
         }
     }
 
