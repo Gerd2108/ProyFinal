@@ -73,6 +73,7 @@ public class FrmRecibo extends javax.swing.JFrame {
         btnCerrar1.setText("CERRAR");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Recibo");
 
         txaRecibo.setColumns(20);
         txaRecibo.setRows(5);

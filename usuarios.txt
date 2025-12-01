@@ -1,6 +1,6 @@
 12345678,María,Pérez,admin1,administrador,
 87654321,Juan,Lopez,trabajador1,Trabajador,
-11223344,Ana,Torres,invitado1,Invitado,ENTRADA - Mon Dec 01 17:47:29 PET 2025#SALIDA - Mon Dec 01 17:47:30 PET 2025
+11223344,Ana,Torres,invitado1,Invitado,ENTRADA - Mon Dec 01 17:47:29 PET 2025#SALIDA - Mon Dec 01 17:47:30 PET 2025#ENTRADA (Invitado) - Mon Dec 01 18:35:23 PET 2025#SALIDA (Invitado) - Mon Dec 01 18:35:25 PET 2025
 74769138,Maria,Luna,secretaria1,Secretaria,
 99887766,Carlos,Ruiz,encargado1,encargado,
 66778899,Luisa,Mendez,contadora1,Contadora,

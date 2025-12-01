@@ -99,7 +99,7 @@ public class FrmContador extends javax.swing.JFrame {
         btnAbrirHistorial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Panel de Control");
+        setTitle("Panel de Control Contador");
         setIconImage(getIconImage());
 
         lblBienvenida.setText("¡Hola, NOMBRE! (CONTADOR)");
@@ -179,7 +179,7 @@ public class FrmContador extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
                                 .addGap(18, 18, 18))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(159, 159, 159)
@@ -225,7 +225,7 @@ public class FrmContador extends javax.swing.JFrame {
                         .addGap(60, 60, 60))))
         );
 
-        setSize(new java.awt.Dimension(743, 705));
+        setSize(new java.awt.Dimension(742, 705));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

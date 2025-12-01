@@ -136,7 +136,7 @@ public class FrmEncargado extends javax.swing.JFrame {
         btnHistorial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Panel de Control");
+        setTitle("Panel de Control Encargado");
         setIconImage(getIconImage());
         setResizable(false);
 

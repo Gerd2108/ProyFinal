@@ -12,6 +12,9 @@ import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import java.awt.Desktop;
+import java.io.File;
+import java.util.List;
 
 /**
  *
@@ -24,6 +27,23 @@ public class FrmInvitado extends javax.swing.JFrame {
      */
     private Usuario usuarioLogueado;
     private Sistema sistema;
+
+    private String obtenerUltimoEstado() {
+        List<String> historial = usuarioLogueado.getAsistencia();
+        if (historial.isEmpty()) {
+            return "NINGUNO";
+        }
+        // Obtenemos el último registro de la lista
+        String ultimo = historial.get(historial.size() - 1);
+
+        if (ultimo.startsWith("ENTRADA")) {
+            return "ENTRADA";
+        }
+        if (ultimo.startsWith("SALIDA")) {
+            return "SALIDA";
+        }
+        return "DESCONOCIDO";
+    }
 
     private void cargarInfoEmpresa() {
         txaInfoEmpresa.setEditable(false);
@@ -106,9 +126,10 @@ public class FrmInvitado extends javax.swing.JFrame {
         txaInfoEmpresa = new javax.swing.JTextArea();
         btnEntrada = new javax.swing.JButton();
         btnSalida = new javax.swing.JButton();
+        btnReporteAsistencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Panel de Control");
+        setTitle("Panel de Control Invitado");
         setIconImage(getIconImage());
         setResizable(false);
 
@@ -146,6 +167,14 @@ public class FrmInvitado extends javax.swing.JFrame {
             }
         });
 
+        btnReporteAsistencia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
+        btnReporteAsistencia.setText("REPORTE DE ASISTENCIA");
+        btnReporteAsistencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteAsistenciaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -156,11 +185,11 @@ public class FrmInvitado extends javax.swing.JFrame {
                         .addGap(27, 27, 27)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnEntrada)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(9, 9, 9))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnReporteAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,7 +199,7 @@ public class FrmInvitado extends javax.swing.JFrame {
                                 .addGap(30, 30, 30)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,9 +221,11 @@ public class FrmInvitado extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(btnReporteAsistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(835, 681));
@@ -206,8 +237,17 @@ public class FrmInvitado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntradaActionPerformed
+        String estado = obtenerUltimoEstado();
+
+        if (estado.equals("ENTRADA")) {
+            JOptionPane.showMessageDialog(this,
+                    "Ya registraste tu ingreso. Debes marcar SALIDA antes.",
+                    "Acción Bloqueada", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         if (JOptionPane.showConfirmDialog(this, "¿Registrar ingreso ahora?", "Confirmar Entrada", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            sistema.registrarAsistencia(usuarioLogueado, "ENTRADA");
+            sistema.registrarAsistencia(usuarioLogueado, "ENTRADA (Invitado)");
             sistema.guardarDatos();
 
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
@@ -216,14 +256,51 @@ public class FrmInvitado extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEntradaActionPerformed
 
     private void btnSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalidaActionPerformed
+        String estado = obtenerUltimoEstado();
+
+        if (!estado.equals("ENTRADA")) {
+            JOptionPane.showMessageDialog(this,
+                    "No tienes un ingreso activo. Marca ENTRADA primero.",
+                    "Aviso del Sistema", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         if (JOptionPane.showConfirmDialog(this, "¿Registrar salida ahora?", "Confirmar Salida", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            sistema.registrarAsistencia(usuarioLogueado, "SALIDA");
+            sistema.registrarAsistencia(usuarioLogueado, "SALIDA (Invitado)");
             sistema.guardarDatos();
 
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            JOptionPane.showMessageDialog(this, "SALIDA REGISTRADA A LAS " + hora + "\n¡Buen descanso!");
+            JOptionPane.showMessageDialog(this, "SALIDA REGISTRADA A LAS " + hora + "\n¡Gracias por tu apoyo!");
         }
     }//GEN-LAST:event_btnSalidaActionPerformed
+
+    private void btnReporteAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteAsistenciaActionPerformed
+        try {
+            File carpeta = new File("Invitados");
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
+            }
+
+            String nombreArchivo = "Asistencia_Invitado_" + usuarioLogueado.getDni() + ".pdf";
+            File archivoFinal = new File(carpeta, nombreArchivo);
+
+            sistema.generarPDFAsistenciaPersonal(usuarioLogueado, archivoFinal.getAbsolutePath());
+
+            JOptionPane.showMessageDialog(this,
+                    "Constancia generada exitosamente en la carpeta 'Invitados'.",
+                    "Reporte Generado",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            if (Desktop.isDesktopSupported() && archivoFinal.exists()) {
+                Desktop.getDesktop().open(archivoFinal);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                    "Ocurrió un error al generar el PDF:\n" + e.getMessage(), 
+                    "Error de Exportación",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnReporteAsistenciaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,6 +347,7 @@ public class FrmInvitado extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEntrada;
+    private javax.swing.JButton btnReporteAsistencia;
     private javax.swing.JButton btnSalida;
     private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;

@@ -120,7 +120,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
         btnResumenDia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Panel de Control");
+        setTitle("Panel de Control Secretaria");
         setIconImage(getIconImage());
         setResizable(false);
 

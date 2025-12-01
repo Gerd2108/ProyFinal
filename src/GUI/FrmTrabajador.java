@@ -109,7 +109,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         btnHonorario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Panel de Control");
+        setTitle("Panel de Control Trabajador");
         setIconImage(getIconImage());
 
         lblBienvenida.setText("¡Hola, NOMBRE! (Trabajador)");
