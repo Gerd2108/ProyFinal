@@ -95,7 +95,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Panel de Control Admnistrador");
+        setTitle("Panel de Control Administrador");
         setIconImage(getIconImage());
 
         lblPNG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/admins.png"))); // NOI18N
