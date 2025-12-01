@@ -229,8 +229,8 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        this.setVisible(false); // Ocultamos Admin
-        frmInventario.setVisible(true); // Mostramos Inventario
+        this.setVisible(false); 
+        frmInventario.setVisible(true); 
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuarioActionPerformed

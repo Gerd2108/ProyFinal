@@ -274,7 +274,7 @@ public class FrmProducto extends javax.swing.JFrame {
         }
 
         try {
-            if (!sistema.sePuedeEliminarProducto(productoAEditar.getIdProducto())) {
+            if (!sistema.eliminarProducto(productoAEditar.getIdProducto())) {
                 javax.swing.JOptionPane.showMessageDialog(this, "No se puede eliminar: El producto está en un alquiler activo.");
                 return;
             }

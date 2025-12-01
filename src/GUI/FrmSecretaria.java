@@ -4,24 +4,16 @@
  */
 package GUI;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import java.awt.Desktop;
 import clases.Alquiler;
 import clases.Sistema;
 import clases.Usuario;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -34,6 +26,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
      */
     private Usuario usuarioLogueado;
     private Sistema sistema;
+    private DefaultListModel<String> modeloLista;
 
     public FrmSecretaria(Usuario usuario, Sistema sistema) {
         initComponents();
@@ -42,12 +35,24 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
 
+        modeloLista = new DefaultListModel<>();
+        jList1.setModel(modeloLista);
+        cargarHistorialAlquileres();
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowActivated(java.awt.event.WindowEvent e) {
+                cargarHistorialAlquileres();
+            }
+        });
+
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
         }
         jList1.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                if (evt.getClickCount() == 2) { // Detectar doble clic
+                if (evt.getClickCount() == 2) {
+
                     try {
                         String seleccion = jList1.getSelectedValue();
                         if (seleccion == null || seleccion.startsWith("---")) {
@@ -73,7 +78,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
             int opcion = javax.swing.JOptionPane.showConfirmDialog(
                     this,
                     "¿Seguro que deseas cerrar sesión?",
-                    "Confirmar cierre de sesión",
+                    "Cerrar Sesión",
                     javax.swing.JOptionPane.YES_NO_OPTION,
                     javax.swing.JOptionPane.QUESTION_MESSAGE
             );
@@ -125,6 +130,11 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/cerrarsesion.png"))); // NOI18N
         btnSalir.setText("CERRAR SESION");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         btnRegistrarSalida.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
         btnRegistrarSalida.setText("REGISTRAR SALIDA");
@@ -135,7 +145,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
         });
 
         btnCuentasCompro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/clavemostrar.png"))); // NOI18N
-        btnCuentasCompro.setText("VER CUENTAS/COMPROBANTES");
+        btnCuentasCompro.setText("ACTUALIZAR COMPROBANTES");
         btnCuentasCompro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCuentasComproActionPerformed(evt);
@@ -202,7 +212,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(41, Short.MAX_VALUE)
+                        .addContainerGap(48, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblBienvenida)
                             .addGroup(layout.createSequentialGroup()
@@ -265,7 +275,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarEntradaActionPerformed
-        String dni = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el DNI del personal para registrar ENTRADA:");
+        String dni = javax.swing.JOptionPane.showInputDialog(this, "Ingrese el DNI del personal:", "Registro de Entrada", javax.swing.JOptionPane.QUESTION_MESSAGE);
 
         if (dni != null && !dni.isEmpty()) {
             clases.Usuario usuario = sistema.buscarUsuarioPorDNI(dni);
@@ -295,18 +305,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
 
     private void btnCuentasComproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentasComproActionPerformed
-        javax.swing.DefaultListModel<String> modelo = new javax.swing.DefaultListModel<>();
-        modelo.addElement("--- Historial de Alquileres Registrados ---");
-        for (clases.Alquiler alq : sistema.getAlquileres()) {
-            String linea = String.format("ID: %d | Cliente: %s | Total: S/ %,.2f",
-                    alq.getIdAlquiler(),
-                    alq.getCliente().getNombre(),
-                    alq.calcularTotal()
-            );
-            modelo.addElement(linea);
-        }
-
-        jList1.setModel(modelo);
+        cargarHistorialAlquileres();
     }//GEN-LAST:event_btnCuentasComproActionPerformed
 
     private void btnDevolucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolucionActionPerformed
@@ -331,114 +330,55 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
     private void btnReporteGlobalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteGlobalActionPerformed
         try {
-            String nombreArchivo = "Reporte_Global_Alquileres_" + System.currentTimeMillis() + ".pdf";
-            File archivo = new File(nombreArchivo);
 
-            generarPDFGlobal(archivo);
+            File carpeta = new File("Reportes");
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
+            }
 
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().open(archivo);
+            String nombreArchivo = "Reporte_Global_" + System.currentTimeMillis() + ".pdf";
+            java.io.File archivo = new java.io.File(carpeta, nombreArchivo);
+
+            sistema.generarPDFGlobal(archivo, usuarioLogueado.getNombre() + " " + usuarioLogueado.getApellido());
+
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop.getDesktop().open(archivo);
             }
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
+
     }//GEN-LAST:event_btnReporteGlobalActionPerformed
 
     private void btnResumenDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResumenDiaActionPerformed
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            String hoy = sdf.format(new Date());
 
-            String nombrePDF = "Cierre_Caja_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".pdf";
-
-            org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument();
-            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
-            doc.addPage(page);
-
-            org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
-
-            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 18);
-            content.beginText();
-            content.newLineAtOffset(50, 750);
-            content.showText("REPORTE DIARIO DE CAJA - DAL ESTRUCTURAS");
-            content.endText();
-
-            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 12);
-            content.beginText();
-            content.newLineAtOffset(50, 730);
-            content.showText("Fecha de Cierre: " + hoy);
-            content.endText();
-
-            int y = 700;
-            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER_BOLD), 10);
-            content.beginText();
-            content.newLineAtOffset(50, y);
-            content.showText(String.format("%-5s %-35s %-15s %-10s", "ID", "CLIENTE", "HORA", "TOTAL"));
-            content.endText();
-            y -= 15;
-            content.moveTo(50, y + 10);
-            content.lineTo(550, y + 10);
-            content.stroke();
-
-            double totalDia = 0;
-            int conteo = 0;
-            SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
-            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.COURIER), 10);
-
-            for (clases.Alquiler alq : sistema.getAlquileres()) {
-
-                if (alq.getFecha() != null && sdf.format(alq.getFecha()).equals(hoy)) {
-
-                    double monto = alq.calcularTotal();
-                    totalDia += monto;
-                    conteo++;
-
-                    String cliente = alq.getCliente().getNombre() + " " + alq.getCliente().getApellido();
-                    if (cliente.length() > 30) {
-                        cliente = cliente.substring(0, 28) + "..";
-                    }
-
-                    String linea = String.format("%-5d %-35s %-15s %8.2f",
-                            alq.getIdAlquiler(),
-                            cliente,
-                            sdfHora.format(alq.getFecha()),
-                            monto);
-
-                    content.beginText();
-                    content.newLineAtOffset(50, y);
-                    content.showText(linea);
-                    content.endText();
-                    y -= 15;
-                }
+            File carpeta = new File("Reportes");
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
             }
 
-            y -= 20;
-            content.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD), 14);
-            content.beginText();
-            content.newLineAtOffset(50, y);
-            content.showText("Total Transacciones: " + conteo);
-            content.endText();
+            String nombreArchivo = "Cierre_Caja_" + new SimpleDateFormat("yyyyMMdd").format(new java.util.Date()) + ".pdf";
 
-            content.beginText();
-            content.newLineAtOffset(300, y);
-            content.showText("TOTAL S/: " + String.format("%.2f", totalDia));
-            content.endText();
+            String rutaCompleta = new File(carpeta, nombreArchivo).getAbsolutePath();
 
-            content.close();
-            doc.save(nombrePDF);
-            doc.close();
+            sistema.generarPDFCierreCaja(usuarioLogueado, rutaCompleta);
 
-            if (java.awt.Desktop.isDesktopSupported()) {
-                java.awt.Desktop.getDesktop().open(new java.io.File(nombrePDF));
+            File archivoGenerado = new File(rutaCompleta);
+            if (java.awt.Desktop.isDesktopSupported() && archivoGenerado.exists()) {
+                java.awt.Desktop.getDesktop().open(archivoGenerado);
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "PDF Generado: " + nombrePDF);
+                javax.swing.JOptionPane.showMessageDialog(this, "Reporte guardado en Reportes.");
             }
-
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error generando PDF: " + e.getMessage());
-            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
         }
+
     }//GEN-LAST:event_btnResumenDiaActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -454,16 +394,24 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmSecretaria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmSecretaria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmSecretaria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmSecretaria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmSecretaria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -499,90 +447,46 @@ public class FrmSecretaria extends javax.swing.JFrame {
     private javax.swing.JLabel lblPNG;
     // End of variables declaration//GEN-END:variables
 
-    private void generarPDFGlobal(File archivo) throws IOException {
-        try (PDDocument doc = new PDDocument()) {
-            PDPage page = new PDPage();
-            doc.addPage(page);
-
-            try (PDPageContentStream content = new PDPageContentStream(doc, page)) {
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 16);
-                content.beginText();
-                content.newLineAtOffset(50, 750);
-                content.showText("REPORTE HISTÓRICO DE ALQUILERES");
-                content.endText();
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
-                content.beginText();
-                content.newLineAtOffset(50, 735);
-                content.showText("Generado al: " + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
-                content.endText();
-
-                int y = 700;
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD), 9);
-                content.beginText();
-                content.newLineAtOffset(50, y);
-
-                content.showText(String.format("%-5s %-12s %-35s %-12s", "ID", "FECHA", "CLIENTE", "TOTAL"));
-                content.endText();
-
-                y -= 10;
-                content.moveTo(50, y);
-                content.lineTo(550, y);
-                content.stroke();
-                y -= 15;
-
-                double totalGeneral = 0;
-                SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy");
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 9);
-
-                for (clases.Alquiler a : sistema.getAlquileres()) {
-                    if (y < 50) {
-                        break;
-                    }
-                    double monto = a.calcularTotal();
-                    totalGeneral += monto;
-
-                    String fechaStr = (a.getFecha() != null) ? sdfFecha.format(a.getFecha()) : "--/--/----";
-
-                    String nombreCliente = a.getCliente().getNombre() + " " + a.getCliente().getApellido();
-                    if (nombreCliente.length() > 33) {
-                        nombreCliente = nombreCliente.substring(0, 30) + "...";
-                    }
-
-                    String linea = String.format("%-5d %-12s %-35s S/%9.2f",
-                            a.getIdAlquiler(),
-                            fechaStr,
-                            nombreCliente,
-                            monto);
-
-                    content.beginText();
-                    content.newLineAtOffset(50, y);
-                    content.showText(linea);
-                    content.endText();
-                    y -= 15;
-                }
-
-                y -= 20;
-                content.moveTo(50, y + 10);
-                content.lineTo(550, y + 10);
-                content.stroke();
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 12);
-                content.beginText();
-                content.newLineAtOffset(300, y);
-                content.showText("TOTAL HISTÓRICO: S/ " + String.format("%.2f", totalGeneral));
-                content.endText();
-            }
-            doc.save(archivo);
-        }
-    }
-
     private String recortar(String texto, int max) {
         if (texto == null) {
             return "";
         }
         return texto.length() > max ? texto.substring(0, max - 3) + "..." : texto;
+    }
+
+    private void cargarHistorialAlquileres() {
+        modeloLista.clear();
+        // Cabecera opcional
+        modeloLista.addElement("--- HISTORIAL DE TRANSACCIONES (Doble clic para ver recibo) ---");
+
+        for (Alquiler alq : sistema.getAlquileres()) {
+            // Formato: "ID: 1 | Cliente: Juan Perez | Total: S/ 500.00"
+            String linea = String.format("ID: %d | Cliente: %s | Total: S/ %.2f",
+                    alq.getIdAlquiler(),
+                    alq.getCliente().getNombre() + " " + alq.getCliente().getApellido(),
+                    alq.calcularTotal()
+            );
+            modeloLista.addElement(linea);
+        }
+    }
+
+    private void abrirReciboDeLista(String textoSeleccionado) {
+        try {
+            // Extraemos el ID de la cadena "ID: 123 | ..."
+            String[] partes = textoSeleccionado.split("\\|"); // Separar por la barra vertical
+            String parteID = partes[0].replace("ID:", "").trim(); // Quitar texto "ID:"
+            int id = Integer.parseInt(parteID);
+
+            // Buscar el alquiler real
+            Alquiler alquiler = sistema.buscarAlquilerPorID(id);
+
+            if (alquiler != null) {
+                // Abrir la ventana de recibo
+                FrmRecibo recibo = new FrmRecibo(alquiler);
+                recibo.setVisible(true);
+            }
+        } catch (Exception e) {
+            // Ignorar clics en líneas que no son alquileres (como la cabecera)
+        }
     }
 }

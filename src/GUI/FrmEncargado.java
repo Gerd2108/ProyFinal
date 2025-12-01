@@ -92,8 +92,6 @@ public class FrmEncargado extends javax.swing.JFrame {
 
         cargarInventarioEnTabla();
 
-        
-
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -418,15 +416,21 @@ public class FrmEncargado extends javax.swing.JFrame {
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         try {
+
+            File carpeta = new File("Reportes");
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
+            }
+
             String nombreArchivo = "Reporte_Inventario_" + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".pdf";
-            File archivo = new File(nombreArchivo);
+            File archivo = new File(carpeta, nombreArchivo);
 
-            generarPDFInventario(archivo);
+            sistema.generarPDFInventario(archivo, this.usuarioLogueado);
 
-            if (Desktop.isDesktopSupported()) {
+            if (Desktop.isDesktopSupported() && archivo.exists()) {
                 Desktop.getDesktop().open(archivo);
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Reporte guardado: " + nombreArchivo);
+                javax.swing.JOptionPane.showMessageDialog(this, "Reporte guardado en: " + archivo.getAbsolutePath());
             }
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error al generar reporte: " + e.getMessage());
@@ -515,77 +519,6 @@ public class FrmEncargado extends javax.swing.JFrame {
                 getImage(ClassLoader.getSystemResource("media/logofinal.png"));
 
         return retValue;
-    }
-
-    private void generarPDFInventario(File archivo) throws IOException {
-        try (PDDocument doc = new PDDocument()) {
-            PDPage page = new PDPage();
-            doc.addPage(page);
-
-            try (PDPageContentStream content = new PDPageContentStream(doc, page)) {
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 18);
-                content.beginText();
-                content.newLineAtOffset(50, 750);
-                content.showText("REPORTE GENERAL DE INVENTARIO - DAL ESTRUCTURAS");
-                content.endText();
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 10);
-                content.beginText();
-                content.newLineAtOffset(50, 735);
-                content.showText("Fecha de emisión: " + new Date().toString());
-                content.endText();
-
-                int y = 700;
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD), 10);
-                content.beginText();
-                content.newLineAtOffset(50, y);
-                content.showText(String.format("%-5s %-35s %-15s %-10s %-10s", "ID", "PRODUCTO", "CATEGORÍA", "PRECIO", "STOCK"));
-                content.endText();
-
-                y -= 10;
-                content.moveTo(50, y);
-                content.lineTo(550, y);
-                content.stroke();
-                y -= 15;
-
-                content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
-
-                for (clases.Producto p : sistema.getInventario().getListaProductos()) {
-                    if (y < 50) {
-                        content.close();
-                        PDPage newPage = new PDPage();
-                        doc.addPage(newPage);
-                        break;
-                    }
-
-                    content.beginText();
-                    content.newLineAtOffset(50, y);
-
-                    String linea = String.format("%-5d %-35s %-15s S/%-9.2f %-10d",
-                            p.getIdProducto(),
-                            recortar(p.getNomProducto(), 35),
-                            recortar(p.getCatProducto(), 15),
-                            p.getPrecio(),
-                            p.getStock());
-
-                    content.showText(linea);
-                    content.endText();
-
-                    if (p.getStock() < 5) {
-                        content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE), 10);
-                        content.beginText();
-                        content.newLineAtOffset(500, y);
-                        content.showText("(!)");
-                        content.endText();
-                        content.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
-                    }
-
-                    y -= 15;
-                }
-            }
-            doc.save(archivo);
-        }
     }
 
     private String recortar(String texto, int max) {

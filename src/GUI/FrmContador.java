@@ -267,18 +267,18 @@ public class FrmContador extends javax.swing.JFrame {
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
 
         try {
-            sistema.generarPDFContable();
+            sistema.generarPDFContable(usuarioLogueado.getNombre() + " " + usuarioLogueado.getApellido());
             txaReporte.setText("Reporte Contable generado exitosamente.");
             abrirPDF("Reporte_Contable.pdf");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btnReporteActionPerformed
 
     private void btnAbrirHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirHistorialActionPerformed
         try {
-            sistema.generarPDFHistorialPagos();
+            sistema.generarPDFHistorialPagos(usuarioLogueado.getNombre() + " " + usuarioLogueado.getApellido());
             txaReporte.setText("Historial de Pagos generado exitosamente.");
             abrirPDF("Historial_Pagos.pdf");
         } catch (Exception e) {
@@ -288,9 +288,12 @@ public class FrmContador extends javax.swing.JFrame {
 
     private void abrirPDF(String nombre) {
         try {
-            File archivo = new File(nombre);
+            File archivo = new File("Reportes", nombre);
+
             if (archivo.exists() && Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(archivo);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encuentra el archivo en la carpeta Reportes.");
             }
         } catch (IOException e) {
             e.printStackTrace();

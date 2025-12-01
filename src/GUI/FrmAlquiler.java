@@ -319,9 +319,7 @@ public class FrmAlquiler extends javax.swing.JFrame {
 
         if (p != null) {
 
-            String input = JOptionPane.showInputDialog(this,
-                    "Producto: " + p.getNomProducto() + "\nStock Disponible: " + stockActual + "\n\nIngrese Cantidad:",
-                    "1");
+            String input = JOptionPane.showInputDialog(this, "Ingrese Cantidad:", "Solicitud de Cantidad", JOptionPane.QUESTION_MESSAGE);
 
             if (input == null || input.isEmpty()) {
                 return;

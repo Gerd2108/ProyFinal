@@ -254,16 +254,25 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
     private void btnReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReciboActionPerformed
         try {
+
+            File carpeta = new File("Trabajadores");
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
+            }
+
             String nombreArchivo = "Constancia_Trabajo_" + usuarioLogueado.getDni() + ".pdf";
-            sistema.generarPDFAsistenciaPersonal(usuarioLogueado, nombreArchivo);
+            File archivoFinal = new File(carpeta, nombreArchivo);
 
-            JOptionPane.showMessageDialog(this, "Comprobante generado exitosamente.");
+            sistema.generarPDFAsistenciaPersonal(usuarioLogueado, archivoFinal.getAbsolutePath());
 
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().open(new File(nombreArchivo));
+            JOptionPane.showMessageDialog(this, "Comprobante guardado en la carpeta 'Trabajadores'.");
+
+            if (Desktop.isDesktopSupported() && archivoFinal.exists()) {
+                Desktop.getDesktop().open(archivoFinal);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al generar PDF: " + e.getMessage());
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnReciboActionPerformed
 
@@ -293,14 +302,23 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
     private void btnHonorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHonorarioActionPerformed
         try {
+            File carpeta = new File("Trabajadores");
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
+            }
             String nombreArchivo = "Recibo_Honorarios_" + usuarioLogueado.getDni() + ".pdf";
-            sistema.generarPDFReciboHonorarios(usuarioLogueado, nombreArchivo);
-            JOptionPane.showMessageDialog(this, "Recibo por Honorarios generado.");
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().open(new File(nombreArchivo));
+            File archivoFinal = new File(carpeta, nombreArchivo);
+
+            sistema.generarPDFReciboHonorarios(usuarioLogueado, archivoFinal.getAbsolutePath());
+
+            JOptionPane.showMessageDialog(this, "Recibo por Honorarios guardado en la carpeta 'Trabajadores'.");
+
+            if (Desktop.isDesktopSupported() && archivoFinal.exists()) {
+                Desktop.getDesktop().open(archivoFinal);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error PDF: " + e.getMessage());
+            e.printStackTrace();
         }
     }//GEN-LAST:event_btnHonorarioActionPerformed
 

@@ -16,6 +16,8 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import java.io.InputStream;
 
 /**
  *
@@ -234,10 +236,27 @@ public class FrmRecibo extends javax.swing.JFrame {
                 document.addPage(page);
 
                 try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+
+                    try {
+
+                        InputStream in = getClass().getResourceAsStream("/media/logohd.jpg");
+                        if (in != null) {
+
+                            byte[] bytes = in.readAllBytes();
+
+                            PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, bytes, "logo");
+
+                            contentStream.drawImage(pdImage, 50, 730, 150, 60);
+                            in.close();
+                        }
+                    } catch (Exception ex) {
+                        System.err.println("No se pudo cargar el logo: " + ex.getMessage());
+                    }
+
                     contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
                     contentStream.beginText();
 
-                    contentStream.newLineAtOffset(50, 750);
+                    contentStream.newLineAtOffset(50, 700);
                     contentStream.setLeading(12f);
 
                     String[] lineas = texto.split("\n");
@@ -267,9 +286,22 @@ public class FrmRecibo extends javax.swing.JFrame {
 
             try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
 
+                try {
+                    InputStream in = getClass().getResourceAsStream("/media/logohd.jpg");
+                    if (in != null) {
+                        byte[] bytes = in.readAllBytes();
+                        PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, bytes, "logo");
+                        contentStream.drawImage(pdImage, 50, 730, 150, 60);
+                        in.close();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
                 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 10);
                 contentStream.beginText();
-                contentStream.newLineAtOffset(50, 750);
+
+                contentStream.newLineAtOffset(50, 700);
                 contentStream.setLeading(12f);
 
                 String[] lineas = text.split("\n");

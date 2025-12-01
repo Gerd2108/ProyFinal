@@ -244,7 +244,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
         if (usuarioAEditar == null) {
 
             int nuevoId = sistema.getUsuarios().size() + 1;
-            clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, nombre, apellido, pass, rol); 
+            clases.Usuario nuevoUsuario = new clases.Usuario(nuevoId, dni, nombre, apellido, pass, rol);
 
             if (sistema.agregarUsuario(nuevoUsuario)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " (" + rol.getNombreRol() + ") registrado exitosamente.", "Registro Exitoso", javax.swing.JOptionPane.INFORMATION_MESSAGE);
@@ -258,7 +258,6 @@ public class FrmRegistrar extends javax.swing.JFrame {
             usuarioAEditar.setApellido(apellido);
             usuarioAEditar.setClave(pass);
             usuarioAEditar.setRol(rol);
-            usuarioAEditar.setApellido("Usuario");
 
             if (sistema.modificarUsuario(dni, usuarioAEditar)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Usuario " + dni + " modificado exitosamente.", "Modificación Exitosa", javax.swing.JOptionPane.INFORMATION_MESSAGE);
