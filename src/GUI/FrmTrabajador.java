@@ -241,13 +241,16 @@ public class FrmTrabajador extends javax.swing.JFrame {
                     "Acción Bloqueada", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (JOptionPane.showConfirmDialog(this, "¿Marcar ENTRADA ahora?", "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(this, "¿Marcar ENTRADA ahora?", "Registrar Entrada", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             sistema.registrarAsistencia(usuarioLogueado, "ENTRADA");
             sistema.guardarDatos();
 
             cargarHistorialAsistencia();
 
-            JOptionPane.showMessageDialog(this, "Entrada registrada con éxito.");
+            JOptionPane.showMessageDialog(this,
+                    "Entrada registrada con éxito.",
+                    "Registro Exitoso",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
     }//GEN-LAST:event_btnRegistrarEntradaActionPerformed
@@ -286,13 +289,16 @@ public class FrmTrabajador extends javax.swing.JFrame {
             return;
         }
 
-        if (JOptionPane.showConfirmDialog(this, "¿Marcar SALIDA ahora?", "Confirmar", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(this, "¿Marcar SALIDA ahora?", "Registrar Salida", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             sistema.registrarAsistencia(usuarioLogueado, "SALIDA");
             sistema.guardarDatos();
 
             cargarHistorialAsistencia();
 
-            JOptionPane.showMessageDialog(this, "Salida registrada. ¡Buen descanso!");
+            JOptionPane.showMessageDialog(this,
+                    "Salida registrada. ¡Buen descanso!",
+                    "Registro Exitoso",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
 

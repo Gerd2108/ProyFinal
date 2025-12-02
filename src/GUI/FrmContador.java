@@ -237,14 +237,14 @@ public class FrmContador extends javax.swing.JFrame {
         int filaSeleccionada = tblResultados.getSelectedRow();
 
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un empleado de la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un empleado de la tabla.", "Error al realizar el Pago", JOptionPane.ERROR_MESSAGE);
             return;
         }
         String dniEmpleado = tblResultados.getValueAt(filaSeleccionada, 0).toString();
         Usuario empleadoAPagar = sistema.buscarUsuarioPorDNI(dniEmpleado);
 
         if (empleadoAPagar == null) {
-            JOptionPane.showMessageDialog(this, "No se encontró el empleado.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se encontró el empleado.", "Error al realizar el Pago", JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
@@ -259,7 +259,7 @@ public class FrmContador extends javax.swing.JFrame {
             txtMonto.setText("");
 
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un monto válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un monto válido.", "Error al realizar el Pago", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btnRegPagoActionPerformed

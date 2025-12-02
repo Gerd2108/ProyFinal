@@ -251,7 +251,10 @@ public class FrmInvitado extends javax.swing.JFrame {
             sistema.guardarDatos();
 
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            JOptionPane.showMessageDialog(this, "ENTRADA REGISTRADA A LAS " + hora);
+            JOptionPane.showMessageDialog(this, 
+                    "ENTRADA REGISTRADA A LAS " + hora, 
+                    "Registro Exitoso", 
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnEntradaActionPerformed
 
@@ -270,7 +273,10 @@ public class FrmInvitado extends javax.swing.JFrame {
             sistema.guardarDatos();
 
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            JOptionPane.showMessageDialog(this, "SALIDA REGISTRADA A LAS " + hora + "\n¡Gracias por tu apoyo!");
+            JOptionPane.showMessageDialog(this, 
+                    "SALIDA REGISTRADA A LAS " + hora + "\n¡Gracias por tu apoyo!", 
+                    "Registro Exitoso",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnSalidaActionPerformed
 

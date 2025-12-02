@@ -309,7 +309,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         int fila = tblProductosDisponibles.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un producto.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Seleccione un producto de la tabla.",
+                    "Selección Requerida",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -319,7 +322,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
 
         if (p != null) {
 
-            String input = JOptionPane.showInputDialog(this, "Ingrese Cantidad:", "Solicitud de Cantidad", JOptionPane.QUESTION_MESSAGE);
+            String input = JOptionPane.showInputDialog(this,
+                    "Ingrese la Cantidad:",
+                    "Agregar al Carrito",
+                    JOptionPane.QUESTION_MESSAGE);
 
             if (input == null || input.isEmpty()) {
                 return;
@@ -329,12 +335,18 @@ public class FrmAlquiler extends javax.swing.JFrame {
                 int cantidad = Integer.parseInt(input);
 
                 if (cantidad <= 0) {
-                    JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0.");
+                    JOptionPane.showMessageDialog(this,
+                            "La cantidad debe ser mayor a 0.",
+                            "Cantidad Inválida",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 if (cantidad > stockActual) {
-                    JOptionPane.showMessageDialog(this, "No hay suficiente stock.\nStock actual: " + stockActual);
+                    JOptionPane.showMessageDialog(this,
+                            "No hay suficiente stock.\nStock actual: " + stockActual,
+                            "Stock Insuficiente",
+                            JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
@@ -347,7 +359,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
                 agregarFilaCarritoVisual(p, cantidad);
 
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Ingrese un número válido.");
+                JOptionPane.showMessageDialog(this,
+                        "Ingrese un número válido.",
+                        "Error de Formato",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
@@ -355,7 +370,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
         int fila = tblCarrito.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un ítem del carrito para quitar.");
+            JOptionPane.showMessageDialog(this,
+                    "Seleccione un ítem del carrito para quitar.",
+                    "Selección Requerida",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -377,7 +395,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
 
     private void btnRegistrarAlquilerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarAlquilerActionPerformed
         if (carrito.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "El carrito está vacío.");
+            JOptionPane.showMessageDialog(this,
+                    "El carrito está vacío. Agregue productos antes de registrar.",
+                    "Carrito Vacío",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -394,31 +415,41 @@ public class FrmAlquiler extends javax.swing.JFrame {
             String direccion = txtDireccion.getText().trim();
 
             if (nroDoc.isEmpty() || nombre.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Debe ingresar el Número de Documento y el Nombre.");
+                JOptionPane.showMessageDialog(this,
+                        "Debe ingresar el Número de Documento y el Nombre.",
+                        "Datos Incompletos",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (!nroDoc.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "El documento debe contener solo números.", "Error de Formato", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "El documento debe contener solo números.",
+                        "Error de Formato",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (tipoDoc.equals("DNI") && nroDoc.length() != 8) {
-                JOptionPane.showMessageDialog(this, "El DNI debe tener exactamente 8 dígitos.", "Error DNI", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "El DNI debe tener exactamente 8 dígitos.",
+                        "Error DNI",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
             if (tipoDoc.equals("RUC") && nroDoc.length() != 11) {
-                JOptionPane.showMessageDialog(this, "El RUC debe tener exactamente 11 dígitos.", "Error RUC", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "El RUC debe tener exactamente 11 dígitos.",
+                        "Error RUC",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             Cliente cliente = sistema.buscarClientePorDNI(nroDoc);
             if (cliente == null) {
-
                 cliente = new Cliente(nroDoc, nombre, "", direccion);
                 sistema.agregarCliente(cliente);
             } else {
-
                 cliente.setNombre(nombre);
                 cliente.setDireccion(direccion);
             }
@@ -439,7 +470,10 @@ public class FrmAlquiler extends javax.swing.JFrame {
             sistema.agregarAlquiler(nuevoAlquiler);
             sistema.guardarDatos();
 
-            JOptionPane.showMessageDialog(this, "Alquiler registrado correctamente.\nTotal: S/ " + nuevoAlquiler.calcularTotal());
+            JOptionPane.showMessageDialog(this,
+                    "Alquiler registrado correctamente.\nTotal: S/ " + nuevoAlquiler.calcularTotal(),
+                    "Registro Exitoso",
+                    JOptionPane.INFORMATION_MESSAGE);
 
             FrmRecibo recibo = new FrmRecibo(nuevoAlquiler);
             recibo.setVisible(true);
@@ -452,8 +486,11 @@ public class FrmAlquiler extends javax.swing.JFrame {
             txtNombreCliente.setText("");
             txtDireccion.setText("");
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Ingrese una cantidad de días válida.");
+        } catch (NumberFormatException e) {            
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese una cantidad de días válida.",
+                    "Dato Inválido",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegistrarAlquilerActionPerformed
 

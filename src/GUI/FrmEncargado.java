@@ -364,7 +364,7 @@ public class FrmEncargado extends javax.swing.JFrame {
 
         int fila = jTable1.getSelectedRow();
         if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un producto de la tabla.", "Aviso", javax.swing.JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un producto de la tabla.", "Selección Requerida", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -442,7 +442,10 @@ public class FrmEncargado extends javax.swing.JFrame {
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
         int fila = jTable1.getSelectedRow();
         if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Selecciona un producto para ver sus movimientos.");
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Por favor, selecciona un producto de la tabla para ver sus movimientos.", 
+                    "Selección Requerida", 
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
 

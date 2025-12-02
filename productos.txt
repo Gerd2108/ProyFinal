@@ -1,4 +1,4 @@
-103,Lona,Decoración,200.0,17
+103,Lona,Decoración,200.0,40
 104,Tubo,Estructuras,100.0,98
 105,Base,Estructuras,290.0,31
 106,Triangulo,Estructuras,120.0,24

@@ -245,7 +245,12 @@ public class Sistema {
 
     // ASISTENCIAS Y PAGOS
     public void registrarAsistencia(Usuario usuario, String tipo) {
-        String registro = tipo + " - " + new java.util.Date().toString();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a", new Locale("es", "PE"));
+        String fechaHora = sdf.format(new java.util.Date());
+
+        String registro = tipo + " - " + fechaHora;
+
         usuario.getAsistencia().add(registro);
     }
 

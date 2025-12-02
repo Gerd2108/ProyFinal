@@ -237,7 +237,7 @@ public class FrmAdmin extends javax.swing.JFrame {
         int filaSeleccionada = jList1.getSelectedIndex();
 
         if (filaSeleccionada <= 0) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario de la lista para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un usuario de la lista para modificar.", "Alerta del Sistema", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -261,7 +261,7 @@ public class FrmAdmin extends javax.swing.JFrame {
 
             frmReg.setVisible(true);
         } else {
-            JOptionPane.showMessageDialog(this, "No se pudo encontrar al usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar al usuario.", "Alerta del Sistema", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnModificarUsuarioActionPerformed
 
