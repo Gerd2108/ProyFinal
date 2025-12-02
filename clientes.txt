@@ -3,3 +3,5 @@
 12345678911,Lus,,Jirón Mirones
 12456789,Luis,,Pablo
 13456782,Tulio,,test
+11223345,pepe,,avs
+12345670,juancho,,asc
