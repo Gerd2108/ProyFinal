@@ -55,6 +55,24 @@ public class FrmRecibo extends javax.swing.JFrame {
         clases.Estilos.estiloBoton(brnAbrirPDF, false);
 
         clases.Estilos.estiloBotonDestructivo(btnSalir);
+
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Deseas cerrar esta Ventana?",
+                        "Cerrar Ventana",
+                        javax.swing.JOptionPane.YES_NO_OPTION,
+                        javax.swing.JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                    dispose();
+                }
+            }
+        });
     }
 
     public FrmRecibo() {

@@ -69,6 +69,24 @@ public class FrmAlquiler extends javax.swing.JFrame {
 
         cmbTipoDoc.setFont(clases.Estilos.FONT_NORMAL);
         cmbTipoDoc.setBackground(clases.Estilos.COLOR_WHITE);
+        
+         this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Deseas cerrar esta ventana sin guardar?", 
+                        "Cerrar Ventana",
+                        javax.swing.JOptionPane.YES_NO_OPTION,
+                        javax.swing.JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                    dispose();
+                }
+            }
+        });
 
     }
 

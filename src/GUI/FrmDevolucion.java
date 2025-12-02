@@ -61,13 +61,31 @@ public class FrmDevolucion extends javax.swing.JFrame {
 
         clases.Estilos.estiloBoton(btnDevolver, true);
         clases.Estilos.estiloBotonDestructivo(btnSalir);
+
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Deseas cerrar esta Ventana?",
+                        "Cerrar Ventana",
+                        javax.swing.JOptionPane.YES_NO_OPTION,
+                        javax.swing.JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                    dispose();
+                }
+            }
+        });
     }
 
     private void cargarListaAlquileres() {
         DefaultTableModel modelo = new DefaultTableModel(new String[]{"ID", "Cliente (DNI)", "Nombre", "Total (S/)"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Tabla no editable
+                return false;
             }
         };
 
@@ -81,7 +99,6 @@ public class FrmDevolucion extends javax.swing.JFrame {
         }
         tblAlquileres.setModel(modelo);
 
-        // Si no hay alquileres, limpiar detalles
         if (sistema.getAlquileres().isEmpty()) {
             limpiarDetalles();
         }
@@ -258,13 +275,11 @@ public class FrmDevolucion extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
-            // Lógica central de devolución
             boolean exito = sistema.procesarDevolucion(alquilerSeleccionado);
 
             if (exito) {
                 JOptionPane.showMessageDialog(this, "Devolución exitosa. Stock actualizado.");
 
-                // Refrescar todo
                 cargarListaAlquileres();
                 limpiarDetalles();
 

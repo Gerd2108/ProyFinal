@@ -69,6 +69,35 @@ public class FrmTrabajador extends javax.swing.JFrame {
 
         clases.Estilos.estiloBotonDestructivo(btnSalir);
 
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+
+                int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Seguro que deseas salir del sistema?\nSe guardarán los cambios automáticamente.",
+                        "Confirmar Salida",
+                        javax.swing.JOptionPane.YES_NO_OPTION,
+                        javax.swing.JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                    try {
+                        if (sistema != null) {
+                            sistema.guardarDatos();
+                            System.out.println("Datos guardados correctamente al cerrar.");
+                        }
+                    } catch (Exception ex) {
+                        System.err.println("Error al guardar datos al salir: " + ex.getMessage());
+                    }
+
+                    System.exit(0);
+                }
+            }
+        });
+
     }
 
     public FrmTrabajador() {
