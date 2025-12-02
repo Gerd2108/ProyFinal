@@ -13,7 +13,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -26,7 +26,7 @@ public class FrmSecretaria extends javax.swing.JFrame {
      */
     private Usuario usuarioLogueado;
     private Sistema sistema;
-    private DefaultListModel<String> modeloLista;
+    private DefaultTableModel modeloTabla;
 
     public FrmSecretaria(Usuario usuario, Sistema sistema) {
         initComponents();
@@ -35,8 +35,15 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
         lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (" + usuarioLogueado.getRol().getNombreRol() + ")");
 
-        modeloLista = new DefaultListModel<>();
-        jList1.setModel(modeloLista);
+        String[] columnas = {"ID", "DNI Cliente", "Nombre Cliente", "Total"};
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        jTable1.setModel(modeloTabla);
+
         cargarHistorialAlquileres();
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -49,26 +56,23 @@ public class FrmSecretaria extends javax.swing.JFrame {
         for (java.awt.event.ActionListener al : btnSalir.getActionListeners()) {
             btnSalir.removeActionListener(al);
         }
-        jList1.addMouseListener(new MouseAdapter() {
+        jTable1.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
+                    int fila = jTable1.getSelectedRow();
+                    if (fila != -1) {
+                        try {
+                            // Obtenemos el ID de la columna 0
+                            int idAlquiler = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
 
-                    try {
-                        String seleccion = jList1.getSelectedValue();
-                        if (seleccion == null || seleccion.startsWith("---")) {
-                            return;
+                            Alquiler alquiler = sistema.buscarAlquilerPorID(idAlquiler);
+
+                            if (alquiler != null) {
+                                new FrmRecibo(alquiler).setVisible(true);
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Error al abrir recibo: " + e.getMessage());
                         }
-
-                        String idString = seleccion.split(" | ")[1];
-                        int id = Integer.parseInt(idString);
-
-                        Alquiler alquiler = sistema.buscarAlquilerPorID(id);
-
-                        if (alquiler != null) {
-                            new FrmRecibo(alquiler).setVisible(true);
-                        }
-                    } catch (Exception e) {
-                        System.err.println("Error al abrir recibo: " + e.getMessage());
                     }
                 }
             }
@@ -90,6 +94,24 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 login.setVisible(true);
             }
         });
+
+        clases.Estilos.estiloVentana(this);
+        clases.Estilos.estiloEtiqueta(lblBienvenida, true);
+
+        clases.Estilos.estiloTabla(jTable1, jScrollPane1);
+
+        jScrollPane1.getViewport().setBackground(clases.Estilos.COLOR_WHITE);
+        jScrollPane1.setBorder(new javax.swing.border.LineBorder(clases.Estilos.COLOR_SECONDARY, 1));
+
+        clases.Estilos.estiloBoton(btnAlquiler, false);
+        clases.Estilos.estiloBoton(btnRegistrarEntrada, false);
+        clases.Estilos.estiloBoton(btnRegistrarSalida, false);
+        clases.Estilos.estiloBoton(btnDevolucion, false);
+        clases.Estilos.estiloBoton(btnResumenDia, false);
+        clases.Estilos.estiloBoton(btnReporteGlobal, false);
+
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
+
     }
 
     public FrmSecretaria() {
@@ -109,11 +131,9 @@ public class FrmSecretaria extends javax.swing.JFrame {
         lblPNG = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
         btnRegistrarSalida = new javax.swing.JButton();
-        btnCuentasCompro = new javax.swing.JButton();
         btnRegistrarEntrada = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
+        jTable1 = new javax.swing.JTable();
         btnDevolucion = new javax.swing.JButton();
         btnAlquiler = new javax.swing.JButton();
         btnReporteGlobal = new javax.swing.JButton();
@@ -144,14 +164,6 @@ public class FrmSecretaria extends javax.swing.JFrame {
             }
         });
 
-        btnCuentasCompro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/clavemostrar.png"))); // NOI18N
-        btnCuentasCompro.setText("ACTUALIZAR COMPROBANTES");
-        btnCuentasCompro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCuentasComproActionPerformed(evt);
-            }
-        });
-
         btnRegistrarEntrada.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
         btnRegistrarEntrada.setText("REGISTRAR ENTRADA");
         btnRegistrarEntrada.addActionListener(new java.awt.event.ActionListener() {
@@ -163,15 +175,18 @@ public class FrmSecretaria extends javax.swing.JFrame {
         jScrollPane1.setToolTipText("c");
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("Comprobantes"));
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jList1.setToolTipText("");
-        jScrollPane1.setViewportView(jList1);
-
-        jLabel1.setText("HORA: ");
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         btnDevolucion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/anotar.png"))); // NOI18N
         btnDevolucion.setText("REGISTRAR DEVOLUCIÓN");
@@ -212,50 +227,39 @@ public class FrmSecretaria extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(48, Short.MAX_VALUE)
+                        .addContainerGap(204, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblBienvenida)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblPNG)
-                                .addGap(51, 51, 51)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(173, 173, 173))
+                            .addComponent(lblPNG))
+                        .addGap(270, 270, 270))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1)
                         .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnCuentasCompro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDevolucion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAlquiler, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnReporteGlobal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnResumenDia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnReporteGlobal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnResumenDia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAlquiler, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDevolucion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(52, 52, 52))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(lblBienvenida)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(lblPNG))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(lblPNG)
                 .addGap(51, 51, 51)
                 .addComponent(jScrollPane1)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(119, 119, 119)
                 .addComponent(btnAlquiler, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCuentasCompro, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
                 .addComponent(btnRegistrarEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnRegistrarSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,10 +271,10 @@ public class FrmSecretaria extends javax.swing.JFrame {
                 .addComponent(btnReporteGlobal, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(743, 926));
+        setSize(new java.awt.Dimension(899, 926));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -304,10 +308,6 @@ public class FrmSecretaria extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnRegistrarSalidaActionPerformed
 
-    private void btnCuentasComproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentasComproActionPerformed
-        cargarHistorialAlquileres();
-    }//GEN-LAST:event_btnCuentasComproActionPerformed
-
     private void btnDevolucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolucionActionPerformed
 
         FrmDevolucion frmDev = new FrmDevolucion(usuarioLogueado, sistema);
@@ -317,7 +317,6 @@ public class FrmSecretaria extends javax.swing.JFrame {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
 
-                btnCuentasComproActionPerformed(null);
             }
         });
     }//GEN-LAST:event_btnDevolucionActionPerformed
@@ -433,60 +432,30 @@ public class FrmSecretaria extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlquiler;
-    private javax.swing.JButton btnCuentasCompro;
     private javax.swing.JButton btnDevolucion;
     private javax.swing.JButton btnRegistrarEntrada;
     private javax.swing.JButton btnRegistrarSalida;
     private javax.swing.JButton btnReporteGlobal;
     private javax.swing.JButton btnResumenDia;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblPNG;
     // End of variables declaration//GEN-END:variables
 
-    private String recortar(String texto, int max) {
-        if (texto == null) {
-            return "";
-        }
-        return texto.length() > max ? texto.substring(0, max - 3) + "..." : texto;
-    }
-
     private void cargarHistorialAlquileres() {
-        modeloLista.clear();
-        // Cabecera opcional
-        modeloLista.addElement("--- HISTORIAL DE TRANSACCIONES (Doble clic para ver recibo) ---");
+        modeloTabla.setRowCount(0);
 
         for (Alquiler alq : sistema.getAlquileres()) {
-            // Formato: "ID: 1 | Cliente: Juan Perez | Total: S/ 500.00"
-            String linea = String.format("ID: %d | Cliente: %s | Total: S/ %.2f",
-                    alq.getIdAlquiler(),
-                    alq.getCliente().getNombre() + " " + alq.getCliente().getApellido(),
-                    alq.calcularTotal()
-            );
-            modeloLista.addElement(linea);
+            Object[] fila = {
+                alq.getIdAlquiler(),
+                alq.getCliente().getDni(),
+                alq.getCliente().getNombre() + " " + alq.getCliente().getApellido(),
+                String.format("S/ %.2f", alq.calcularTotal())
+            };
+            modeloTabla.addRow(fila);
         }
     }
 
-    private void abrirReciboDeLista(String textoSeleccionado) {
-        try {
-            // Extraemos el ID de la cadena "ID: 123 | ..."
-            String[] partes = textoSeleccionado.split("\\|"); // Separar por la barra vertical
-            String parteID = partes[0].replace("ID:", "").trim(); // Quitar texto "ID:"
-            int id = Integer.parseInt(parteID);
-
-            // Buscar el alquiler real
-            Alquiler alquiler = sistema.buscarAlquilerPorID(id);
-
-            if (alquiler != null) {
-                // Abrir la ventana de recibo
-                FrmRecibo recibo = new FrmRecibo(alquiler);
-                recibo.setVisible(true);
-            }
-        } catch (Exception e) {
-            // Ignorar clics en líneas que no son alquileres (como la cabecera)
-        }
-    }
 }

@@ -65,6 +65,28 @@ public class FrmProducto extends javax.swing.JFrame {
 
             txtID.setText(String.valueOf(sistema.generarNuevoIdProducto()));
         }
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(jLabel4, true);
+
+        clases.Estilos.estiloEtiqueta(jLabel1, false);
+        clases.Estilos.estiloEtiqueta(jLabel2, false);
+        clases.Estilos.estiloEtiqueta(jLabel6, false);
+        clases.Estilos.estiloEtiqueta(jLabel8, false);
+        clases.Estilos.estiloEtiqueta(jLabel3, false);
+        clases.Estilos.estiloEtiqueta(jLabel7, false);
+
+        clases.Estilos.estiloCampo(txtID);
+        clases.Estilos.estiloCampo(txtNombre);
+        clases.Estilos.estiloCampo(txtPrecio);
+        clases.Estilos.estiloCampo(txtStock);
+
+        cbCategoria.setFont(clases.Estilos.FONT_NORMAL);
+        cbCategoria.setBackground(clases.Estilos.COLOR_WHITE);
+
+        clases.Estilos.estiloBoton(btnRegistrar, true);
+        clases.Estilos.estiloBotonDestructivo(btnEliminar);
     }
 
     public void setOnSaveListener(Runnable listener) {
@@ -274,12 +296,18 @@ public class FrmProducto extends javax.swing.JFrame {
         }
 
         try {
+
             if (!sistema.eliminarProducto(productoAEditar.getIdProducto())) {
                 javax.swing.JOptionPane.showMessageDialog(this, "No se puede eliminar: El producto está en un alquiler activo.");
                 return;
             }
 
-            int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar este producto?");
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Estás seguro de que deseas eliminar este producto?",
+                    "Confirmar Eliminación",
+                    javax.swing.JOptionPane.YES_NO_OPTION
+            );
 
             if (confirm == javax.swing.JOptionPane.YES_OPTION) {
                 sistema.getInventario().eliminarProducto(productoAEditar.getIdProducto());
@@ -289,7 +317,7 @@ public class FrmProducto extends javax.swing.JFrame {
                     onUpdateListener.run();
                 }
 
-                javax.swing.JOptionPane.showMessageDialog(this, "Producto eliminado.");
+                javax.swing.JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
                 this.dispose();
             }
         } catch (Exception e) {

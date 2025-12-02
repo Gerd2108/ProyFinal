@@ -75,6 +75,30 @@ public class FrmRegistrar extends javax.swing.JFrame {
         btnSalir.addActionListener(e -> {
             this.dispose();
         });
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(jLabel2, true);
+        clases.Estilos.estiloEtiqueta(jLabel1, false);
+        clases.Estilos.estiloEtiqueta(jLabel3, false);
+        clases.Estilos.estiloEtiqueta(jLabel4, false);
+        clases.Estilos.estiloEtiqueta(jLabel5, false);
+        clases.Estilos.estiloEtiqueta(jLabel6, false);
+        clases.Estilos.estiloEtiqueta(jLabel7, false);
+
+        clases.Estilos.estiloCampo(txtDNI);
+        clases.Estilos.estiloCampo(txtNombre);
+        clases.Estilos.estiloCampo(txtApellido);
+        clases.Estilos.estiloCampo(txtContraseña);
+
+        clases.Estilos.estiloBoton(btnRegistrar, true);
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
+
+        cbRol.setFont(clases.Estilos.FONT_NORMAL);
+        cbRol.setBackground(clases.Estilos.COLOR_WHITE);
+        chkInvitado.setFont(clases.Estilos.FONT_NORMAL);
+        chkInvitado.setBackground(clases.Estilos.COLOR_FONDO);
+        chkInvitado.setForeground(clases.Estilos.COLOR_TEXT);
     }
 
     /**
@@ -145,39 +169,43 @@ public class FrmRegistrar extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(170, 170, 170)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkInvitado, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(94, 94, 94))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(170, 170, 170)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 251, Short.MAX_VALUE)
+                                .addComponent(chkInvitado))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtContraseña)
-                                    .addComponent(txtDNI)
-                                    .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtNombre)
-                                    .addComponent(txtApellido)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbRol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtContraseña)
+                                            .addComponent(txtDNI)
+                                            .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtNombre)
+                                            .addComponent(txtApellido)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbRol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
                 .addGap(210, 210, 210))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(286, 286, 286))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,7 +234,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(cbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
                 .addComponent(chkInvitado)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegistrar)
@@ -215,7 +243,7 @@ public class FrmRegistrar extends javax.swing.JFrame {
                 .addGap(48, 48, 48))
         );
 
-        setSize(new java.awt.Dimension(737, 602));
+        setSize(new java.awt.Dimension(737, 653));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

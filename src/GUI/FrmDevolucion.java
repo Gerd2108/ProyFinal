@@ -48,6 +48,19 @@ public class FrmDevolucion extends javax.swing.JFrame {
                 }
             }
         });
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(lblInfo, false);
+
+        clases.Estilos.estiloTabla(tblAlquileres, jScrollPane2);
+        clases.Estilos.estiloTabla(tblDetalle, jScrollPane1);
+
+        jScrollPane3.getViewport().setBackground(clases.Estilos.COLOR_FONDO);
+        jScrollPane4.getViewport().setBackground(clases.Estilos.COLOR_FONDO);
+
+        clases.Estilos.estiloBoton(btnDevolver, true);
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
     }
 
     private void cargarListaAlquileres() {

@@ -67,6 +67,32 @@ public class FrmLogin extends javax.swing.JFrame {
 
             }
         });
+        clases.Estilos.estiloVentana(this);
+        clases.Estilos.cargarEstilosGlobales();
+
+        clases.Estilos.estiloEtiqueta(jLabel1, true);
+        clases.Estilos.estiloEtiqueta(jLabel2, false);
+        clases.Estilos.estiloEtiqueta(jLabel3, false);
+        clases.Estilos.estiloEtiqueta(jLabel4, false);
+        clases.Estilos.estiloEtiqueta(jLabel5, false);
+        clases.Estilos.estiloEtiqueta(jLabel6, false);
+
+        javax.swing.UIManager.put("OptionPane.yesButtonText", "Sí");
+        javax.swing.UIManager.put("OptionPane.noButtonText", "No");
+        javax.swing.UIManager.put("OptionPane.cancelButtonText", "Cancelar");
+        javax.swing.UIManager.put("OptionPane.okButtonText", "Aceptar");
+        javax.swing.UIManager.put("OptionPane.titleText", "Mensaje");
+        javax.swing.UIManager.put("OptionPane.messageDialogTitle", "Mensaje");
+
+        clases.Estilos.estiloCampo(txtDNI);
+        clases.Estilos.estiloCampo(txtClave);
+
+        clases.Estilos.estiloBoton(btnIngresar, true);
+        clases.Estilos.estiloBoton(btnMostrarClave, false);
+
+        jScrollPane1.getViewport().setBackground(clases.Estilos.COLOR_PRIMARY);
+        jScrollPane1.setBorder(null);
+
     }
 
     /**
@@ -156,33 +182,25 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txtDNI, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtClave, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnMostrarClave)
-                                .addGap(17, 17, 17))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(chkInvitado)
-                                .addContainerGap(32, Short.MAX_VALUE))))
+                            .addComponent(chkInvitado)
+                            .addComponent(btnMostrarClave)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(166, 166, 166)
-                                .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(155, 155, 155)
-                                .addComponent(jLabel6))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(80, 80, 80)
-                                .addComponent(jLabel5))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(185, 185, 185)
-                                .addComponent(jLabel2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(74, 74, 74)
-                                .addComponent(jLabel1)))
-                        .addContainerGap())))
+                        .addGap(80, 80, 80)
+                        .addComponent(jLabel5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(185, 185, 185)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(143, 143, 143)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnIngresar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,11 +230,11 @@ public class FrmLogin extends javax.swing.JFrame {
                         .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6)
-                        .addGap(0, 128, Short.MAX_VALUE)))
+                        .addGap(0, 129, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        setSize(new java.awt.Dimension(788, 603));
+        setSize(new java.awt.Dimension(801, 603));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -327,17 +345,8 @@ public class FrmLogin extends javax.swing.JFrame {
         javax.swing.UIManager.put("OptionPane.okButtonText", "Aceptar");
         javax.swing.UIManager.put("OptionPane.titleText", "Mensaje");
         javax.swing.UIManager.put("OptionPane.messageDialogTitle", "Mensaje");
-
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-
-        }
+        
+        
 
         java.awt.EventQueue.invokeLater(() -> {
 

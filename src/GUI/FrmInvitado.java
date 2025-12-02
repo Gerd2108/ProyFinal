@@ -79,7 +79,7 @@ public class FrmInvitado extends javax.swing.JFrame {
         this.usuarioLogueado = usuario;
         this.sistema = sistema;
 
-        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (PERSONAL TEMPORAL)");
+        lblBienvenida.setText("¡Hola, " + usuarioLogueado.getNombre() + "! (INVITADO)");
 
         cargarInfoEmpresa();
 
@@ -103,6 +103,25 @@ public class FrmInvitado extends javax.swing.JFrame {
                 login.setVisible(true);
             }
         });
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(lblBienvenida, true);
+
+        txaInfoEmpresa.setFont(clases.Estilos.FONT_NORMAL);
+        txaInfoEmpresa.setBackground(clases.Estilos.COLOR_WHITE);
+        txaInfoEmpresa.setForeground(clases.Estilos.COLOR_TEXT);
+        txaInfoEmpresa.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                new javax.swing.border.LineBorder(clases.Estilos.COLOR_SECONDARY, 1),
+                new javax.swing.border.EmptyBorder(10, 10, 10, 10)
+        ));
+        jScrollPane2.getViewport().setBackground(clases.Estilos.COLOR_WHITE);
+
+        clases.Estilos.estiloBoton(btnEntrada, false);
+        clases.Estilos.estiloBoton(btnSalida, false);
+        clases.Estilos.estiloBoton(btnReporteAsistencia, false);
+
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
     }
 
     public FrmInvitado() {
@@ -180,26 +199,25 @@ public class FrmInvitado extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBienvenida, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblPng)
+                                .addGap(30, 30, 30)))
+                        .addGap(181, 181, 181)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnReporteAsistencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnSalida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnEntrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblBienvenida, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(lblPng)
-                                .addGap(30, 30, 30)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                            .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,10 +243,10 @@ public class FrmInvitado extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(835, 681));
+        setSize(new java.awt.Dimension(946, 732));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -251,9 +269,9 @@ public class FrmInvitado extends javax.swing.JFrame {
             sistema.guardarDatos();
 
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            JOptionPane.showMessageDialog(this, 
-                    "ENTRADA REGISTRADA A LAS " + hora, 
-                    "Registro Exitoso", 
+            JOptionPane.showMessageDialog(this,
+                    "ENTRADA REGISTRADA A LAS " + hora,
+                    "Registro Exitoso",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnEntradaActionPerformed
@@ -273,8 +291,8 @@ public class FrmInvitado extends javax.swing.JFrame {
             sistema.guardarDatos();
 
             String hora = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            JOptionPane.showMessageDialog(this, 
-                    "SALIDA REGISTRADA A LAS " + hora + "\n¡Gracias por tu apoyo!", 
+            JOptionPane.showMessageDialog(this,
+                    "SALIDA REGISTRADA A LAS " + hora + "\n¡Gracias por tu apoyo!",
                     "Registro Exitoso",
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -301,8 +319,8 @@ public class FrmInvitado extends javax.swing.JFrame {
                 Desktop.getDesktop().open(archivoFinal);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                    "Ocurrió un error al generar el PDF:\n" + e.getMessage(), 
+            JOptionPane.showMessageDialog(this,
+                    "Ocurrió un error al generar el PDF:\n" + e.getMessage(),
                     "Error de Exportación",
                     JOptionPane.ERROR_MESSAGE);
         }

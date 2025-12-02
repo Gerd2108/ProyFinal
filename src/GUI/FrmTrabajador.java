@@ -55,6 +55,20 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 login.setVisible(true);
             }
         });
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(lblBienvenida, true);
+
+        clases.Estilos.estiloTabla(tblAsistencia, jScrollPane2);
+
+        clases.Estilos.estiloBoton(btnRegistrarEntrada, false);
+        clases.Estilos.estiloBoton(btnRegistrarSalida, false);
+        clases.Estilos.estiloBoton(btnHonorario, false);
+        clases.Estilos.estiloBoton(btnRecibo, false);
+
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
+
     }
 
     public FrmTrabajador() {
@@ -111,6 +125,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Control Trabajador");
         setIconImage(getIconImage());
+        setResizable(false);
 
         lblBienvenida.setText("¡Hola, NOMBRE! (Trabajador)");
 
@@ -161,6 +176,7 @@ public class FrmTrabajador extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblAsistencia.setEnabled(false);
         jScrollPane2.setViewportView(tblAsistencia);
 
         btnHonorario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/descargar.png"))); // NOI18N
@@ -225,10 +241,10 @@ public class FrmTrabajador extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(819, 737));
+        setSize(new java.awt.Dimension(819, 796));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

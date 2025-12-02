@@ -44,6 +44,17 @@ public class FrmRecibo extends javax.swing.JFrame {
         txaRecibo.setText(alquiler.generarTextoRecibo());
         txaRecibo.setEditable(false);
 
+        clases.Estilos.estiloVentana(this);
+
+        txaRecibo.setBackground(clases.Estilos.COLOR_WHITE);
+        txaRecibo.setForeground(clases.Estilos.COLOR_TEXT);
+        jScrollPane1.getViewport().setBackground(clases.Estilos.COLOR_WHITE);
+        jScrollPane1.setBorder(new javax.swing.border.LineBorder(clases.Estilos.COLOR_PRIMARY, 2));
+
+        clases.Estilos.estiloBoton(btnExportarPDF, true);
+        clases.Estilos.estiloBoton(brnAbrirPDF, false);
+
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
     }
 
     public FrmRecibo() {

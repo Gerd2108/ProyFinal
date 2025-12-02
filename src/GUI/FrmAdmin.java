@@ -59,6 +59,25 @@ public class FrmAdmin extends javax.swing.JFrame {
                 login.setVisible(true);
             }
         });
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(lblBienvenida, true);
+
+       
+        clases.Estilos.estiloBoton(btnProductos, false);
+        clases.Estilos.estiloBoton(btnModificarUsuario, false);
+        clases.Estilos.estiloBoton(btnCrearUsuario, false);
+
+        jList1.setFont(clases.Estilos.FONT_NORMAL);
+        jList1.setBackground(clases.Estilos.COLOR_WHITE);
+        jList1.setSelectionBackground(clases.Estilos.COLOR_ACCENT);
+        jList1.setSelectionForeground(clases.Estilos.COLOR_WHITE);
+
+        jTextArea1.setFont(clases.Estilos.FONT_NORMAL);
+        jTextArea1.setBackground(clases.Estilos.COLOR_WHITE);
+        jTextArea1.setBorder(new javax.swing.border.LineBorder(clases.Estilos.COLOR_SECONDARY, 1));
+
     }
 
     public FrmAdmin() {
@@ -80,7 +99,6 @@ public class FrmAdmin extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         btnSalir = new javax.swing.JButton();
-        btnAgregar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         btnProductos = new javax.swing.JButton();
@@ -116,9 +134,6 @@ public class FrmAdmin extends javax.swing.JFrame {
                 btnSalirActionPerformed(evt);
             }
         });
-
-        btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/agregar.png"))); // NOI18N
-        btnAgregar.setText("AGREGAR");
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -172,13 +187,9 @@ public class FrmAdmin extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(42, 42, 42)
                                 .addComponent(lblPNG)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 381, Short.MAX_VALUE)))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 37, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(308, 308, 308))
+                .addGap(0, 117, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,9 +201,7 @@ public class FrmAdmin extends javax.swing.JFrame {
                         .addGap(35, 35, 35)
                         .addComponent(lblPNG))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -206,7 +215,7 @@ public class FrmAdmin extends javax.swing.JFrame {
                 .addGap(47, 47, 47))
         );
 
-        setSize(new java.awt.Dimension(784, 748));
+        setSize(new java.awt.Dimension(945, 748));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -229,8 +238,8 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        this.setVisible(false); 
-        frmInventario.setVisible(true); 
+        this.setVisible(false);
+        frmInventario.setVisible(true);
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuarioActionPerformed
@@ -344,7 +353,6 @@ public class FrmAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCrearUsuario;
     private javax.swing.JButton btnModificarUsuario;
     private javax.swing.JButton btnProductos;

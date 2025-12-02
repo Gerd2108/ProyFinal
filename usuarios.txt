@@ -1,8 +1,8 @@
 12345678,María,Pérez,admin1,administrador,
-87654321,Juan,Lopez,trabajador1,Trabajador,ENTRADA - 01/12/2025 06:57:12 p. m.#SALIDA - 01/12/2025 06:57:13 p. m.
+87654321,Juan,Lopez,trabajador1,Trabajador,ENTRADA - 01/12/2025 06:57:12 p. m.#SALIDA - 01/12/2025 06:57:13 p. m.#ENTRADA - 02/12/2025 02:30:10 p. m.#SALIDA - 02/12/2025 02:30:12 p. m.
 11223344,Ana,Torres,invitado1,Invitado,ENTRADA (Invitado) - 01/12/2025 06:57:52 p. m.#SALIDA (Invitado) - 01/12/2025 06:57:53 p. m.#ENTRADA (Invitado) - 01/12/2025 06:57:57 p. m.#SALIDA (Invitado) - 01/12/2025 06:57:58 p. m.#ENTRADA (Invitado) - 01/12/2025 07:01:01 p. m.#SALIDA (Invitado) - 01/12/2025 07:01:02 p. m.
 74769138,Maria,Luna,secretaria1,Secretaria,
 99887766,Carlos,Ruiz,encargado1,encargado,
 66778899,Luisa,Mendez,contadora1,Contadora,
-09466541,Pablo,Luis,1234,Trabajador,
+09466541,Pablo,Luis,1234,Trabajador,ENTRADA - 02/12/2025 01:49:48 p. m.#SALIDA - 02/12/2025 01:49:51 p. m.
 67694209,Pepe,Rodriguez,probando12,encargado,

@@ -70,6 +70,26 @@ public class FrmContador extends javax.swing.JFrame {
                 login.setVisible(true);
             }
         });
+
+        clases.Estilos.estiloVentana(this);
+
+        clases.Estilos.estiloEtiqueta(lblBienvenida, true);
+        clases.Estilos.estiloEtiqueta(jLabel1, false);
+
+        clases.Estilos.estiloCampo(txtMonto);
+        clases.Estilos.estiloTabla(tblResultados, jScrollPane2);
+
+        txaReporte.setFont(clases.Estilos.FONT_NORMAL);
+        txaReporte.setBackground(clases.Estilos.COLOR_WHITE);
+        txaReporte.setBorder(new javax.swing.border.LineBorder(clases.Estilos.COLOR_SECONDARY, 1));
+        jScrollPane1.getViewport().setBackground(clases.Estilos.COLOR_WHITE);
+
+        clases.Estilos.estiloBoton(btnRegPago, true);
+        clases.Estilos.estiloBoton(btnReporte, false);
+        clases.Estilos.estiloBoton(btnAbrirHistorial, false);
+
+        clases.Estilos.estiloBotonDestructivo(btnSalir);
+
     }
 
     public FrmContador() {
@@ -211,7 +231,7 @@ public class FrmContador extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
@@ -220,12 +240,12 @@ public class FrmContador extends javax.swing.JFrame {
                         .addComponent(btnReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnAbrirHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
-        setSize(new java.awt.Dimension(742, 705));
+        setSize(new java.awt.Dimension(742, 746));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
