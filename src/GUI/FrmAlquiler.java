@@ -10,6 +10,8 @@ import clases.Cliente;
 import clases.Sistema;
 import clases.Usuario;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -170,6 +172,7 @@ public class FrmAlquiler extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Alquiler");
+        setIconImage(getIconImage());
         setResizable(false);
 
         jScrollPane1.setViewportBorder(javax.swing.BorderFactory.createTitledBorder("CARRITO"));
@@ -624,5 +627,13 @@ public class FrmAlquiler extends javax.swing.JFrame {
             cantidad,
             cantidad * p.getPrecio()
         });
+    }
+    
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+
+        return retValue;
     }
 }

@@ -8,6 +8,8 @@ import clases.Alquiler;
 import clases.Producto;
 import clases.Sistema;
 import clases.Usuario;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
@@ -131,6 +133,7 @@ public class FrmDevolucion extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Panel de Devoluciones");
+        setIconImage(getIconImage());
         setResizable(false);
 
         btnDevolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media/devolver.png"))); // NOI18N
@@ -345,6 +348,13 @@ public class FrmDevolucion extends javax.swing.JFrame {
                 new FrmDevolucion().setVisible(true);
             }
         });
+    }
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+
+        return retValue;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

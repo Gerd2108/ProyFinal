@@ -7,6 +7,8 @@ package GUI;
 import clases.Producto;
 import clases.Sistema;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 public class FrmProducto extends javax.swing.JFrame {
@@ -140,6 +142,7 @@ public class FrmProducto extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Registro de Productos");
+        setIconImage(getIconImage());
         setResizable(false);
 
         jLabel1.setText("ID:");
@@ -386,6 +389,13 @@ public class FrmProducto extends javax.swing.JFrame {
                 new FrmProducto().setVisible(true);
             }
         });
+    }
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+
+        return retValue;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

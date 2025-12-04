@@ -7,6 +7,8 @@ package GUI;
 import clases.Sistema;
 import java.awt.Desktop;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JFileChooser;
@@ -103,6 +105,7 @@ public class FrmRecibo extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Recibo");
+        setIconImage(getIconImage());
 
         txaRecibo.setColumns(20);
         txaRecibo.setRows(5);
@@ -348,5 +351,12 @@ public class FrmRecibo extends javax.swing.JFrame {
             }
             document.save(tempFile);
         }
+    }
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("media/logofinal.png"));
+
+        return retValue;
     }
 }
